@@ -1,3 +1,4 @@
+# 2.2
 example(mean)
 
 # 1. Generamos dos vectores de datos desde sendas distribuciones normales
