@@ -40,3 +40,24 @@ image(x,y,f)
 # 12. Demostración de otras funciones gráficas
 demo(graphics)
 demo(persp)
+##############
+
+# 2.3 
+x<-5;
+y<-2*x; 
+z<-log(y);
+k<-x*y*z
+ls()
+rm(x,y)
+ls()
+rm(list=ls())
+ls()
+
+# matrix(data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
+matrix(pi,1,3)
+
+#########
+#2.4
+0.3 -0.1 == 0.2
+0.3 - 0.2
+all.equal(0.3 - 0.2, 0.1)
