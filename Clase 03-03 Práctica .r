@@ -1,31 +1,41 @@
 # Práctica 03-03
 
 rm(list = ls())
-# Ejercicio 1
+# Ejercicio 1 --------------------------------------------------------------
 x <- seq(1, 10, by = 0.2)
-n <- length(x) # a
-names(x) <- paste("x_", 1:n, sep = "") # b
+# a
+n <- length(x)
+
+# b
+names(x) <- paste("x_", 1:n, sep = "") 
 x
-mx <- mean(x) # c
-sum(x > mx) # d número de elementos de x mayores que mx
-which.min(x > mx) # e
+# c
+mx <- mean(x)
+
+# d número de elementos de x mayores que mx
+sum(x > mx)
+
+# e
+which.min(x > mx)
 y <- seq(1, by = 2, length.out = 15)
-y # f. n primeros números impares
+y 
+# f) n primeros números impares
 x[y[1:5]] # g
 
+
 rm(list = ls())
-# Ejercicio 2
+# Ejercicio 2 --------------------------------------------------------------
 x <- seq(-2, 2, by = 0.1)
 x
 
-(x < -1) * 1 +
-    (-1 <= x & x < 0) * log(x^2) +
-    (0 <= x & x < 1) * log(x^2 + 1) +
-    (1 <= x) * 2
+(x < -1)           * 1 +
+(-1 <= x & x < 0)  * log(x^2) +
+(0 <= x & x < 1)   * log(x^2 + 1) +
+(1 <= x)           * 2
 
 
 rm(list = ls())
-# Ejercicio 3
+# Ejercicio 3 ---------------------------------------------------------------
 set.seed(1)
 x <- runif(50)
 # a
@@ -45,29 +55,30 @@ mean(x)
 
 
 rm(list = ls())
-# Ejercicio 4
+# Ejercicio 4 -----------------------------------------------------------------
 d <- 1.2
 longit <- 20
 n <- 1:longit
 # La sucesión dada es a_n = a_1 + (n - 1) * d
 # esta se simplifica a a_(n+1) = a_n + d
+# Fuente: Andrés. Como alternativa: a <- a_1 +((1:20) - 1) * d
 a <- seq(1, by = d, length.out = longit)
 s <- sum(a)
-20 * (a[1] + a[longit]) / 2
-s == 20 * (a[1] + a[longit]) / 2
+s == longit * (a[1] + a[longit]) / 2
+# Nota: por defecto R usa doubles para numéricos
 
 # A partir de aquí ya lo hice fuera, pero por completarlo:
 # b
 std_dev <- sd(a)
-std_dev == abs(d)* sqrt(longit*(longit+1)/12)
+std_dev == abs(d) * sqrt(longit * (longit + 1) / 12)
 
 # c
 p <- prod(a)
-all.equal(p, d^longit * gamma(a[1]/d + longit) / gamma(a[1]/d))
+all.equal(p, d^longit * gamma(a[1] / d + longit) / gamma(a[1] / d))
 
 
 rm(list = ls())
-# Ejercicio 5
+# Ejercicio 5 -----------------------------------------------------------
 x <- c(2, 2, 8, 7, 6, 1, 5)
 n <- 1:length(x)
 y <- seq(1, length(x) - 1, by = )
