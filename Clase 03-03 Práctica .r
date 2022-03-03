@@ -66,3 +66,7 @@ p <- prod(a)
 all.equal(p, d^longit * gamma(a[1]/d + longit) / gamma(a[1]/d))
 
 
+rm(list = ls())
+# Ejercicio 5
+x <- c(2, 2, 8, 7, 6, 1, 5)
+y <- seq()
