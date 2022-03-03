@@ -80,5 +80,21 @@ all.equal(p, d^longit * gamma(a[1] / d + longit) / gamma(a[1] / d))
 rm(list = ls())
 # Ejercicio 5 -----------------------------------------------------------
 x <- c(2, 2, 8, 7, 6, 1, 5)
-n <- 1:length(x)
-y <- seq(1, length(x) - 1, by = )
+y <- x[2:length(x)] - x[1:(length(x) - 1)]
+y
+
+rm(list = ls())
+# Ejercicio 6 ---------------------------------------------------------
+ABE <- LETTERS
+ABE.5 <- sample(ABE, 5, replace = FALSE)
+ABE.5
+
+random_word <- function(word_vector = LETTERS) {
+    paste(sample(word_vector), collapse = "")
+}
+
+PAL <- c(
+    random_word(ABE.5),
+    random_word(ABE.5)
+)
+PAL
