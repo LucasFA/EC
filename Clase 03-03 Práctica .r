@@ -11,12 +11,12 @@ names(x) <- paste("x_", 1:n, sep = "")
 x
 # c
 mx <- mean(x)
-
 # d número de elementos de x mayores que mx
 sum(x > mx)
 
 # e
-which.min(x > mx)
+min_index <- min(which(x > mx))
+min_index
 y <- seq(1, by = 2, length.out = 15)
 y 
 # f) n primeros números impares
@@ -26,14 +26,16 @@ x[y[1:5]] # g
 rm(list = ls())
 # Ejercicio 2 --------------------------------------------------------------
 x <- seq(-2, 2, by = 0.1)
-x
-
-(x < -1)           * 1 +
-(-1 <= x & x < 0)  * log(x^2) +
-(0 <= x & x < 1)   * log(x^2 + 1) +
-(1 <= x)           * 2
-
-
+y <-
+    (x < -1)           * 1 +
+    (-1 <= x & x < 0)  * log(x^2) +
+    (0 <= x & x < 1)   * log(x^2 + 1) +
+    (1 <= x)           * 2
+y
+which(is.nan(y))
+x[21]
+y[which(is.nan(y))] <- 0
+y
 rm(list = ls())
 # Ejercicio 3 ---------------------------------------------------------------
 set.seed(1)
