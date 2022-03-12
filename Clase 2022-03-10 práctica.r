@@ -60,36 +60,121 @@ all.equal(kinv, rcond_funcion)
 # No son exactos. Más o menos
 # Sin embargo,
 1 / kappa_aprox - rcond_funcion
-# tiene menor resultado todavía. 
+# tiene menor resultado todavía.
 # Recordamos que rcond también utiliza una aproximación
 
 
 rm(list = ls())
-# Regresión lineal
-## Computación directa
-reg_lineal <- function(sample_size=5, seed=2, show_points = T){
-    n <- sample_size
-    set.seed(seed)
-    x <- rnorm(n)
-    y <- 1 + x + rnorm(n, 0, 0.1)
-    X_mat_regresion <- cbind(1, x)
 
-    temp <- t(X_mat_regresion) %*% X_mat_regresion
+#
+# ─── REGRESION LINEAL ───────────────────────────────────────────────────────────
+#
+set.seed(2)
+## Computación directa
+reg_lineal <- function(x, y) {
+    X <- cbind(1, x)
+
+    temp <- t(X) %*% X
     inversade_Xtraspuesta_X <- solve(temp)
 
-    beta_gorro <- inversade_Xtraspuesta_X %*% t(X_mat_regresion) %*% y
+    beta_gorro <- inversade_Xtraspuesta_X %*% t(X) %*% y
     # > 1.045, 0.947
     # Efectivamente el modelo se asemeja al esperado, con beta = (1, 1)
 
-    curve(1 + x, -3, 3)
-    if(show_points){
-        points(x, y)
-    }
+    curve(1 + x, -3, 3) # Modelo real
+    points(x, y)
     curve(beta_gorro[1] + beta_gorro[2] * x, -3, 3, add = T, col = 2)
+    beta_gorro
 }
-reg_lineal(5)
-reg_lineal(50)
-reg_lineal(500)
+
+generate_data <- function(n) {
+    x <- rnorm(n)
+    y <- 1 + x + rnorm(n, 0, 0.1)
+    l <- list("x" = x, "y" = y)
+    l
+}
+data_5 <- generate_data(5)
+x_5 <- data_5$x
+y_5 <- data_5$y
+
+beta_gorro <- reg_lineal(x_5, y_5)
+
+data_50 <- generate_data(50)
+x_50 <- data_50$x
+y_50 <- data_50$y
+
+reg_lineal(x_50, y_50)
+
+data_500 <- generate_data(500)
+x_500 <- data_500$x
+y_500 <- data_500$y
+reg_lineal(x_500, y_500)
 # Cuantas más muestras tomes, el modelo se acerca más.
 # Con n = 50, ya se acerca significativamente, pero esto
 # debería medirse con medidas como R^2
+
+# Problemas prácticos:
+#
+#
+#
+# ────────────────────────────────────────────────────────────────────────────────
+# Descomposición QR
+x <- x_5
+y <- y_5
+
+X <- cbind(1, x)
+qr_descomp <- qr(X)
+Q <- qr.Q(qr_descomp)
+b <- t(Q) %*% y
+
+R <- qr.R(qr_descomp)
+
+qr_beta_gorro <- backsolve(R, b)
+qr_beta_gorro - beta_gorro
+# Son esencialmente idénticos. Difieren en menos de 10^(-15) en cada término
+lm(y ~ x)
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Ejercicio propuesto: 4.
+# ────────────────────────────────────────────────────────────────────────────────
+
+rm(list = ls())
+
+mi_matriz <- function(n) {
+    m <- matrix(nrow = n, ncol = n)
+    for (j in 1:n) {
+        m[, j] <- (1:n)^j
+    }
+    m
+}
+
+f_error <- function(x, sol_real) {
+    max(abs(x - sol_real))
+}
+
+ejercicio_para_n <- function(n) {
+    sol_premeditada <- rep(1, times = n)
+    A <- mi_matriz(n)
+    b <- A %*% sol_premeditada
+    x <- solve(A, b)
+
+
+    error <- f_error(x, sol_premeditada)
+    cat(
+        "El error absoluto máximo para", n,
+        "es de", error, "\n"
+    )
+    condicionamiento <- rcond(A)
+    cat("El condicionamiento de la matriz es", condicionamiento, "\n\n")
+}
+
+for (i in 3:12) {
+    ejercicio_para_n(i)
+}
+
+# Resumen de los resultados:
+# El condicionamiento de la matrix ya empieza en 0.0046 para n=3, y decrece en n.
+# Tanto para n = 3 como n = 4, el error reportado es nulo,
+# pero a partir de n = 5, con el recíproco del condicionamiento 10^(-5), el error alcanza 10^(-12),
+# creciendo hasta 6*10^(-4) para n = 11, con condicionamiento 10^(-15),
+# y para n = 12 solve() devuelve un error indicando que el sistema es, prácticamente, singular
