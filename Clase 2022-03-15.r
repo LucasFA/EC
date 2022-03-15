@@ -68,6 +68,30 @@ model
 plot(model)
 
 sample(datos, size = 2) # same as
-datos[sample(1:length(datos), 2)]
+datos[sample(seq_len(length(datos)), 2)]
 
 mtcars
+head(mtcars)
+tail(mtcars)
+
+subset(mtcars, vs == 0 & hp > 90)
+
+subset(mtcars, vs == 0 & hp > 90, select = c(-vs))
+
+# Transformar la masa de libras a kg:
+transform(mtcars, wt = wt / 2.2046)
+transform(mtcars, wtkg = wt / 2.2046)
+# --------------------------------------------------------------------------------
+# within:
+mtcars2 <- within(mtcars, {
+    vs <- factor(vs, labels = c("V", "S"))
+    am <- factor(am, labels = c("automatic", "manual"))
+    cyl <- ordered(cyl)
+    gear <- ordered(gear)
+    carb <- ordered(carb)
+})
+mtcars2
+
+with(mtcars2, boxplot(mpg ~ vs))
+with(subset(mtcars2, vs == "V"), hist(mpg, main = "vs=V"))
+with(subset(mtcars2, vs == "S"), hist(mpg, main = "vs=S"))
