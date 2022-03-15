@@ -95,3 +95,26 @@ mtcars2
 with(mtcars2, boxplot(mpg ~ vs))
 with(subset(mtcars2, vs == "V"), hist(mpg, main = "vs=V"))
 with(subset(mtcars2, vs == "S"), hist(mpg, main = "vs=S"))
+
+# --------------------------------------------------------------------------------
+# Comprobación de tipo y casteo
+
+x <- c(1, 2, 2, 1, 2, 1, 1, 1)
+is.numeric(x)
+is.factor(x)
+x <- as.factor(x)
+x
+class(x)
+as.matrix(1:2)
+as.complex(1:2)
+A <- matrix(1:4, 2, 2)
+is.numeric(A)
+as.numeric(A)
+D <- as.data.frame(A)
+is.data.frame(D[1])
+is.data.frame(D[1, ])
+is.data.frame(D[, 1])
+is.vector(D[, 1])
+as.numeric(factor(c("H", "M")))
+hh <- hist(runif(100), plot = FALSE)
+is.list(hh)
