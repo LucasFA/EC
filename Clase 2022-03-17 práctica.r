@@ -70,6 +70,7 @@ media_y <- sum(datos[["y"]] * datos[["n"]] / sample_size)
 q_var_x <- sum((datos[["x"]] - media_x)^2 * datos[["n"]])   / (sample_size - 1)
 q_var_y <- sum((datos[["y"]] - media_y)^2 * datos[["n"]])   / (sample_size - 1)
 
+
 # c
 datos.n <-
     data.frame(
@@ -89,6 +90,14 @@ datos.n <-
         )
     )
 
+# datos.n <- datos[
+#     rep(
+#         row.names(datos),
+#         times = datos[["n"]]
+#     ),
+#     1:2
+# ]
+
 colnames(datos.n) <- c("x", "y")
 
 # d
@@ -99,3 +108,39 @@ all.equal(var(datos.n[["x"]]), q_var_x)
 all.equal(var(datos.n[["y"]]), q_var_y)
 
 # Efectivamente, son iguales.
+# # Por comodidad, los añado al data.frame
+# datos.n$media_x <- media_x
+# datos.n$media_y <- media_y
+
+# datos.n$q_var_x <- q_var_x
+# datos.n$q_var_y <- q_var_y
+# --------------------------------------------------------------------------------
+# e
+
+datos.n <- transform(
+    datos.n,
+    tipif_x = (x - media_x) / q_var_x,
+    tipif_y = (y - media_y) / q_var_y
+)
+
+datos.n <- within(datos.n, {
+    tipif_x <- (x - media_x) / q_var_x
+    tipif_y <- (y - media_y) / q_var_y
+    }
+)
+
+#
+# ─── EJERCICIO 3 ────────────────────────────────────────────────────────────────
+#
+df <- ChickWeight
+# a
+head(df, 5)
+tail(df, 3)
+
+# b
+str(df)
+# c
+summary(df)
+
+# d
+# peso.dieta <- 
