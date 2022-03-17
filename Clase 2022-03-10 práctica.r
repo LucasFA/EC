@@ -141,10 +141,11 @@ lm(y ~ x)
 rm(list = ls())
 
 mi_matriz <- function(n) {
-    m <- matrix(nrow = n, ncol = n)
-    for (j in 1:n) {
-        m[, j] <- (1:n)^j
-    }
+    m <- matrix(rep(1:n, times = n, each=n)^rep(1:n, times = n),nrow = n, ncol = n, byrow = T)
+    # m <- matrix(nrow = n, ncol = n)
+    # for (j in 1:n) {
+    #     m[, j] <- (1:n)^j
+    # }
     m
 }
 
