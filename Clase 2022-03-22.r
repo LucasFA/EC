@@ -99,11 +99,16 @@ media1(c(NA, 1, 3))
 media1(list("o", 1, 3))
 
 media2 <- function(x, n = 1) {
-    if (!is.vector(x) || !is.numeric(x)) {
-        stop("El argumento x no es un vector numérico")
+    if(length(x) != length(n)) {
+        message("Los argumentos no tienen la misma longitud. Se aplicará reciclaje")
     }
-    if (!is.vector(n)) {
-        stop("El argumento n no es un vector")
+    n <- rep(n, length.out = length(x))
+
+    if (!(is.vector(n) && is.numeric(n))) {
+        stop("El argumento n no es un vector numérico")
+    }
+    if (!(is.vector(x) && is.numeric(x))) {
+        stop("El argumento x no es un vector numérico")
     }
     if (any(n < 0)) {
         warning("El argumento n tiene valores negativos")
@@ -118,6 +123,7 @@ media2 <- function(x, n = 1) {
 # Test
 media2(list(0, 3), c(1, 2))             # not a vector
 media2(unlist(list(0, 3)), c(1, 2))     # a vector
+media2(c(0, 3), list(1, 1.777))
 
 media2(c(0, 3), c(1, 1.777))
 media2(c(0, 1, 5), c(3, 1))
