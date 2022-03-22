@@ -1,0 +1,6 @@
+DNI Edad Sexo Estudios Salario
+22456715A 45 Hombre Superior 2500
+22456716B 35 Mujer Superior 1500
+22456717C 52 Hombre Profesional 2000
+22456718D 60 Mujer Medio 1200
+22456719E 25 Hombre Profesional 1800
