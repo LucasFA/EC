@@ -67,7 +67,7 @@ all.equal(kinv, rcond_funcion)
 rm(list = ls())
 
 #
-# ─── REGRESION LINEAL ───────────────────────────────────────────────────────────
+# --- REGRESION LINEAL -----------------------------------------------------------
 #
 set.seed(2)
 ## Computación directa
@@ -117,7 +117,7 @@ reg_lineal(x_500, y_500)
 #
 #
 #
-# ────────────────────────────────────────────────────────────────────────────────
+# --------------------------------------------------------------------------------
 # Descomposición QR
 x <- x_5
 y <- y_5
@@ -134,14 +134,14 @@ qr_beta_gorro - beta_gorro
 # Son esencialmente idénticos. Difieren en menos de 10^(-15) en cada término
 lm(y ~ x)
 
-# ────────────────────────────────────────────────────────────────────────────────
+# --------------------------------------------------------------------------------
 # Ejercicio propuesto: 4.
-# ────────────────────────────────────────────────────────────────────────────────
+# --------------------------------------------------------------------------------
 
 rm(list = ls())
 
 mi_matriz <- function(n) {
-    m <- matrix(rep(1:n, times = n, each=n)^rep(1:n, times = n),nrow = n, ncol = n, byrow = T)
+    m <- matrix(rep(1:n, times = n, each = n)^rep(1:n, times = n), nrow = n, ncol = n, byrow = T)
     # m <- matrix(nrow = n, ncol = n)
     # for (j in 1:n) {
     #     m[, j] <- (1:n)^j

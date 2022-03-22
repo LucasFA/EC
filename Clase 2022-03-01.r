@@ -29,4 +29,4 @@ q
 # Implicit type conversion
 rep(1:5, times = seq(1, by = 2, length.out = 5))
 rep(1:5, each = 2)
-rep(1:3, each = 5, times=3)
+rep(1:3, each = 5, times = 3)

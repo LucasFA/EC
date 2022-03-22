@@ -7,7 +7,7 @@ x <- seq(1, 10, by = 0.2)
 n <- length(x)
 
 # b
-names(x) <- paste("x_", 1:n, sep = "") 
+names(x) <- paste("x_", 1:n, sep = "")
 x
 # c
 mx <- mean(x)
@@ -18,7 +18,7 @@ sum(x > mx)
 min_index <- min(which(x > mx))
 min_index
 y <- seq(1, by = 2, length.out = 15)
-y 
+y
 # f) n primeros números impares
 x[y[1:5]] # g
 

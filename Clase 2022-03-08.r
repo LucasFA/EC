@@ -32,14 +32,14 @@ sexo.f
 edad <- c(23, 25, 20, 19, 20, 22, 24, 20, 23, 19)
 mean(edad[sexo.f == "hombre"])
 mean(edad[sexo.f == "mujer"])
-    # tapply
+# tapply
 help("tapply")
 tapply(edad, sexo.f, mean)
 tapply(edad, sexo.f, sd)
 tapply(edad, sexo.f, summary)
 tapply(edad, civil.f, summary)
-    # plotting
-boxplot(edad~sexo.f)
+# plotting
+boxplot(edad ~ sexo.f)
 help("boxplot")
 
 rm(list = ls())
