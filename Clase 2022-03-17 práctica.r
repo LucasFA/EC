@@ -55,7 +55,7 @@ colnames(matriz) <- c("residuos", "valores ajustados", "x", "y")
 #
 rm(list = ls())
 x <- c(1.2, 1.8, 2.2, 2.5, 1.1)
-y <- c(15, 18, 10, 12, 16)
+y <- c(15, 18, 10, 12, 6)
 n <- c(12, 23, 5, 9, 11)
 
 datos <- data.frame(x, y, n)
@@ -72,6 +72,8 @@ q_var_y <- sum((datos[["y"]] - media_y)^2 * datos[["n"]])   / (sample_size - 1)
 
 
 # c
+datos.n <- datos[rep(seq_len(nrow(datos)), datos$n), 1:2]
+# lo mismo, pero más conciso que,
 datos.n <-
     data.frame(
         cbind(
@@ -90,14 +92,6 @@ datos.n <-
         )
     )
 
-# datos.n <- datos[
-#     rep(
-#         row.names(datos),
-#         times = datos[["n"]]
-#     ),
-#     1:2
-# ]
-
 colnames(datos.n) <- c("x", "y")
 
 # d
@@ -108,24 +102,18 @@ all.equal(var(datos.n[["x"]]), q_var_x)
 all.equal(var(datos.n[["y"]]), q_var_y)
 
 # Efectivamente, son iguales.
-# # Por comodidad, los añado al data.frame
-# datos.n$media_x <- media_x
-# datos.n$media_y <- media_y
-
-# datos.n$q_var_x <- q_var_x
-# datos.n$q_var_y <- q_var_y
 # --------------------------------------------------------------------------------
 # e
 
 datos.n <- transform(
     datos.n,
-    tipif_x = (x - media_x) / q_var_x,
-    tipif_y = (y - media_y) / q_var_y
+    tipif_x = (x - media_x) / sqrt(q_var_x),
+    tipif_y = (y - media_y) / sqrt(q_var_y)
 )
 
 datos.n <- within(datos.n, {
-    tipif_x <- (x - media_x) / q_var_x
-    tipif_y <- (y - media_y) / q_var_y
+    tipif_x <- (x - media_x) / sqrt(q_var_x)
+    tipif_y <- (y - media_y) / sqrt(q_var_y)
     }
 )
 
@@ -159,19 +147,21 @@ peso.dieta.2 <- data.frame(
     )
 )
 
-names(peso.dieta.2) <- names(peso.dieta[[1]])
+colnames(peso.dieta.2) <- names(peso.dieta[[1]])
 peso.dieta.2
 
 # f
 peso.dieta.2.2 <- aggregate(df$weight, by = list(df$Diet), summary)
 peso.dieta.2.2
+class(peso.dieta.2.2)
 
 # g
 set.seed(77)
 Chick100 <- ChickWeight[sample(1:nrow(ChickWeight), size = 100), ]
 # h
 Chick100[sample(1:nrow(Chick100)), ]
-
+#bueno, bien, pero era permutar las columnas
+Chick100[, sample(1:ncol(Chick100))]
 # i
 Chick100[order(names(Chick100))]
 
