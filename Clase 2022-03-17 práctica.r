@@ -157,11 +157,11 @@ class(peso.dieta.2.2)
 
 # g
 set.seed(77)
-Chick100 <- ChickWeight[sample(1:nrow(ChickWeight), size = 100), ]
+Chick100 <- ChickWeight[sample(seq_len(nrow(ChickWeight)), size = 100), ]
 # h
-Chick100[sample(1:nrow(Chick100)), ]
-#bueno, bien, pero era permutar las columnas
-Chick100[, sample(1:ncol(Chick100))]
+Chick100[sample(seq_len(nrow(Chick100))), ]
+# bueno, bien, pero era permutar las columnas
+Chick100[, sample(seq_len(ncol(Chick100)))]
 # i
 Chick100[order(names(Chick100))]
 
@@ -172,4 +172,4 @@ Chick100[order(Chick100$Diet, Chick100$weight), ]
 # k
 
 Chick100.ordenado <- Chick100[order(Chick100$weight, decreasing = T), ]
-Chick100.ordenado[!duplicated(Chick100.ordenado$Diet),]
+Chick100.ordenado[!duplicated(Chick100.ordenado$Diet), ]
