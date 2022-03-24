@@ -2,6 +2,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/r,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=r,visualstudiocode
 
+### I/O ###
+/Outputfiles/*
+
 ### R ###
 # History files
 .Rhistory
