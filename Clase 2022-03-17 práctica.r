@@ -130,8 +130,9 @@ datos.n <- within(datos.n, {
 )
 
 #
-# ─── EJERCICIO 3 ────────────────────────────────────────────────────────────────
+# --- EJERCICIO 3 ----------------------------------------------------------------
 #
+rm(list = ls())
 df <- ChickWeight
 # a
 head(df, 5)
@@ -143,4 +144,42 @@ str(df)
 summary(df)
 
 # d
-# peso.dieta <- 
+peso.dieta <- tapply(df$weight, INDEX = list(df$Diet), summary)
+class(peso.dieta)
+# > Array
+mode(peso.dieta)
+typeof(peso.dieta)
+peso.dieta
+
+# e
+peso.dieta.2 <- data.frame(
+    matrix(
+        unlist(peso.dieta),
+        byrow = T, nrow = length(peso.dieta), ncol = length(peso.dieta[[1]])
+    )
+)
+
+names(peso.dieta.2) <- names(peso.dieta[[1]])
+peso.dieta.2
+
+# f
+peso.dieta.2.2 <- aggregate(df$weight, by = list(df$Diet), summary)
+peso.dieta.2.2
+
+# g
+set.seed(77)
+Chick100 <- ChickWeight[sample(1:nrow(ChickWeight), size = 100), ]
+# h
+Chick100[sample(1:nrow(Chick100)), ]
+
+# i
+Chick100[order(names(Chick100))]
+
+# j
+Chick100[order(Chick100$Diet), ]
+Chick100[order(Chick100$Diet, Chick100$weight), ]
+
+# k
+
+Chick100.ordenado <- Chick100[order(Chick100$weight, decreasing = T), ]
+Chick100.ordenado[!duplicated(Chick100.ordenado$Diet),]
