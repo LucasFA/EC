@@ -4,7 +4,7 @@ y <- x > 3 & x < 5
 y
 
 paste(c("X", "Y"), 1:5, sep = "")
-names(x) <- paste(c("x"), 1:length(x), sep = "")
+names(x) <- paste(c("x"), seq_along(x), sep = "")
 x
 nth <- paste0(1:10, c("st", "nd", "rd", rep("th", 7)))
 nth

@@ -99,7 +99,7 @@ media1(c(NA, 1, 3))
 media1(list("o", 1, 3))
 
 media2 <- function(x, n = 1) {
-    if(length(x) != length(n)) {
+    if (length(x) != length(n)) {
         message("Los argumentos no tienen la misma longitud. Se aplicará reciclaje")
     }
     n <- rep(n, length.out = length(x))
