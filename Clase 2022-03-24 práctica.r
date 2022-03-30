@@ -17,7 +17,7 @@ sum(complete.cases(censo))
 # e
 censo2 <- censo[complete.cases(censo), ]
 censo2
-censo2 == na.omit(censo)
+all(censo2 == na.omit(censo))
 
 # f
 write.table(censo2,
@@ -35,9 +35,15 @@ censo3 <- read.table(
     sep = "\t",
     stringsAsFactors = T
 )
+# Misma estructura
 str(censo2)
 str(censo3)
+str_censo_2 <- capture.output(str(censo2))
+str_censo_3 <- capture.output(str(censo3))
+all(str_censo_2 == str_censo_3)
+
 any(censo2 != censo3)
+all(censo2 == censo3)
 
 #
 # --- EJERCICIO 2 ----------------------------------------------------------------
