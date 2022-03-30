@@ -220,14 +220,11 @@ saludo <- function(franja = NA, nombre) {
 
 
 saludo <- function(franja = NA, nombre) {
-    if (is.na(franja)) {
-        return(paste("Hola", nombre))
-    }
-
     switch(as.character(franja),
-        "1" = paste("Buenos días", nombre),
-        "2" = paste("Buenas tardes", nombre),
-        "3" = paste("Buenas noches", nombre),
+        "NA" = paste("Hola", nombre),
+        "1"  = paste("Buenos días", nombre),
+        "2"  = paste("Buenas tardes", nombre),
+        "3"  = paste("Buenas noches", nombre),
         {
             warning("Franja puede ser 1 (mañana), 2 (tarde) ó 3 (noche)")
             paste("Hola", nombre)
