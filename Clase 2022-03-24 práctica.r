@@ -63,16 +63,19 @@ class(colnames(matriz))
 write.table(matriz,
     file = "./outputfiles/matriz.txt",
     sep = ",",
-    row.names = F
+    row.names = F,
+    quote = F
 )
 
-
+my_df <- read.table(file = "./outputfiles/matriz.txt", header = T, sep = ",")
+my_df
 #
 # --- EJERCICIO 3 ----------------------------------------------------------------
 #
 rm(list = ls())
 olimpics <- read.csv(file = "./Inputfiles/Olympics100m.csv", stringsAsFactors = T)
 str(olimpics)
+
 # b
 sum(is.na(olimpics))
 
@@ -82,11 +85,12 @@ resumen
 class(resumen)
 typeof(resumen)
 
-write.table(resumen, file = "./outputfiles/resumen.txt", row.names = F, sep = "\t")
-read.table(file = "./outputfiles/resumen.txt", sep = "\t")
+write.table(resumen, file = "./outputfiles/resumen.txt", row.names = F, sep = "\t", quote = F)
+read.table(file = "./outputfiles/resumen.txt", sep = "\t", header = T, strip.white = T)
 
 # d
 resumen2 <- aggregate(olimpics$TIME, by = list(olimpics$Gender), FUN = summary)
+resumen2
 write.csv(resumen2, file = "./outputfiles/resumen2.csv", row.names = F)
 
 # Comprobamos que pueda ser bien leído
