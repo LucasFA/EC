@@ -78,4 +78,74 @@ b
 # ─── APARTADO 2 ─────────────────────────────────────────────────────────────────
 #
 
-    
+medias <- function(x, na.rm = TRUE) {
+    if (na.rm) {
+        x <- x[!is.na(x)]
+    }
+    if (!is.vector(x) || !(is.numeric(x) || is.logical(x))) {
+        warning("argument is not numeric or logical. Returning NA")
+        return(list(aritm = NA, geom = NA, arm = NA))
+    }
+    hay_malos_valores <- any(x <= 0)
+    if (hay_malos_valores) {
+          warning("El vector tiene valores negativos o cero.")
+      }
+
+    aritmetica <- function(x) {
+        return(sum(x) / length(x))
+    }
+
+    geometrica <- function(x) {
+        if (hay_malos_valores) {
+            return(NA)
+        }
+        return(prod(x)^(1 / length(x)))
+    }
+
+    armonica <- function(x) {
+        if (hay_malos_valores) {
+            return(NA)
+        }
+        return(length(x) / sum(1 / x))
+    }
+
+
+    return(list(aritm = aritmetica(x), geom = geometrica(x), arm = armonica(x)))
+}
+
+medias(c(1, 0))
+medias(c(1, "d"))
+
+medias(1:10)
+medias(c(1:10, NA))
+medias(0:10)
+medias(-1:10)
+
+naive_mediana <- function(x) {
+    # vector => vector ordenado => punto medio del vector ordenado
+    ordenado <- sort(x)
+    if (length(x) %% 2) {
+        ordenado[length(x) / 2 + 1]
+    } else {
+        mean(c(ordenado[length(x) / 2], ordenado[length(x) / 2 + 1]))
+    }
+}
+
+mediana <- function(x, rm.na = TRUE) {
+    if (rm.na) {
+        x <- x[!is.na(x)]
+    }
+    if (!is.vector(x) || !is.numeric(x)) {
+        stop("El argumento no es un vector numérico")
+    }
+    return(naive_mediana(x))
+}
+
+mediana(1:5)
+mediana(1:6)
+mediana(c(1:6, NA))
+mediana("hola")
+set.seed(1)
+test <- runif(20)
+sort(test)
+mediana(test)
