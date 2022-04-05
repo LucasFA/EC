@@ -28,7 +28,7 @@ for (i in 1:100) {
 
 f <- function(x) {
     suma <- 0
-    for (i in 1:length(x)) {
+    for (i in seq_along(x)) {
         suma <- suma + x[i]
         if (suma > 0.5) {
             return(paste("Me paro en i=", i, "porque la suma supera 0.5"))
@@ -91,8 +91,8 @@ sum(x) / length(x)
 # Otro ejemplo:
 A <- matrix(1:6, 2, 3)
 sumas.filas <- numeric(nrow(A))
-for (i in 1:nrow(A)) {
-    for (j in 1:ncol(A)) sumas.filas[i] <- sumas.filas[i] + A[i, j]
+for (i in seq_lenght(nrow(A))) { # seq_length === 1:
+    for (j in seq_length(ncol(A))) sumas.filas[i] <- sumas.filas[i] + A[i, j]
 }
 sumas.filas
 
