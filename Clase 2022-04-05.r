@@ -294,7 +294,7 @@ factorial.v(10000000)
 #
 # --- SUCESION DE FIBONNACI ------------------------------------------------------
 #
-
+# Recursivo
 Fibonacci.r <- function(n) {
     if (missing(n) || !is.numeric(n)) {
         return(NA)
@@ -312,6 +312,7 @@ Fibonacci.r <- function(n) {
 Fibonacci.r(5)
 Fibonacci.r(20)
 
+# Constructivo, construyendo una tabla
 Fibonacci.v <- function(n) {
     if (missing(n) || !is.numeric(n)) {
         return(NA)
@@ -326,4 +327,58 @@ Fibonacci.v <- function(n) {
 Fibonacci.v(5)
 
 # benchmarking
-Fibonacci.r(200)
+t1 <- Sys.time()
+Fibonacci.r(30)
+t2 <- Sys.time()
+print(t2 - t1)
+# Nota: tarda unos 2 <-> 3 segundos.
+# La complejidad algorítmica exponencial (para n + 1 hace aproximadamente el doble de cálculos)
+# de esta implementación llevaría a que  Fibonacci.r(300) tardase
+# el mismo tiempo (2.5 segundos) multiplicado por 2^(300-30) == 2^270 ~= 10^81 s ~= 10^67 millones de años
+# si lees esto, me daba curiosidad bro, viva la algorítmica
+t1 <- Sys.time()
+Fibonacci.v(200)
+t2 <- Sys.time()
+print(t2 - t1)
+
+# --------------------------------------------------------------------------------
+# Ejercicio 4
+Fibonacci.v.mod <- function(n) {
+    if (missing(n) || !is.numeric(n)) {
+        return(NA)
+    }
+    n <- as.integer(n)
+    v <- integer(n)
+    v[1:2] <- 1
+    for (i in 3:n) v[i] <- v[i - 1] + v[i - 2]
+
+    ret <- list()
+    ret[[1]] <- v[n]
+    ret[[2]] <- v
+    ret[[3]] <- sum(v)
+    return(ret)
+}
+
+Fibonacci.v.mod(20)
+# ────────────────────────────────────────────────────────────────────────────────
+
+# Fibonacci recursivo eficiente. Esto ya no es parte de la clase.
+Fibonacci.r.mod <- function(n) {
+    cache <- c(1, 1)
+    # Comprobaciones ...
+    #
+    fib <- function(n) {
+        if (n <= length(cache)) {
+            return(cache[[n]])
+        } else {
+            cache[[n]] <<- fib(n - 1) + fib(n - 2)
+            return(cache[[n]])
+        }
+    }
+    return(fib(n))
+}
+
+t1 <- Sys.time()
+Fibonacci.r.mod(300)
+t2 <- Sys.time()
+print(t2 - t1)
