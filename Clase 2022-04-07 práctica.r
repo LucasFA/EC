@@ -148,3 +148,40 @@ res.NR$aprox - res.uni$root
 #
 # --- EJERCICIO PROPUESTO 2 ------------------------------------------------------
 #
+
+
+dif.eq <- function(x1, r, n) {
+    x <- vector()
+    x[[1]] <- x1
+    for (i in 2:n) {
+        x[[i]] <- r * x[[i - 1]] * (1 - x[[i - 1]])
+    }
+    return(x)
+}
+# a
+res <- dif.eq(r = 2, x1 = 0.1, n = 20)
+res
+# --------------------------------------------------------------------------------
+# b
+res <- dif.eq(r = 2.99, x1 = 0.95, n = 500)
+res
+plot(1:500, res)
+# ────────────────────────────────────────────────────────────────────────────────
+# c
+dif.eq2 <- function(x1, r) {
+    formula <- function(x) {
+        r * x * (1 - x)
+    }
+    x <- vector()
+    x[[1]] <- x1
+    x[[2]] <- formula(x[[1]])
+
+    i <- 2
+    while (abs(x[[i]] - x[[i - 1]]) >= 0.02) {
+        i <- i + 1
+        x[[i]] <- formula(x[[i - 1]])
+    }
+    return(list(sucesion = x, iteraciones = length(x) - 1))
+}
+
+dif.eq2(x1 = 0.95, r = 2.99)
