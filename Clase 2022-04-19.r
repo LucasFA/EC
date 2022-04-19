@@ -19,7 +19,7 @@ A
 # --------------------------------------------------------------------------------
 # Ejercicio 2
 rm(list = ls())
-hatco <- read.table("./inputfiles/hatco.txt", header = T)[]
+hatco <- read.table("./inputfiles/hatco.txt", header = T)
 # # Eliminar la primera columna, que es meramente un índice asociado
 # hatco <- hatco[2:ncol(hatco)]
 hatco$x8 <- factor(hatco$x8, labels = c("Pequeña", "Grande"))
@@ -36,6 +36,9 @@ hatco.pequeña <- subset(hatco, x8 == "Pequeña")
 hatco.grandes <- subset(hatco, x8 == "Grande")
 hatco.pequeña[sample(seq_len(nrow(hatco.pequeña)), 1), ]
 hatco.grandes[sample(seq_len(nrow(hatco.grandes)), 1), ]
+
+# Alternativa más elegante y corta:
+aggregate(x = hatco, by = list(hatco$x8), FUN = sample, 1)
 
 # --------------------------------------------------------------------------------
 # 5
@@ -83,7 +86,7 @@ progresion_aritmetica2 <- function(n, a1, d, explicit = FALSE) {
             list(
                 v = a,
                 suma = n * (a[[1]] + a[[n]]) / 2,
-                producto = d^n * gamma(a[[1]] / d + n + 1) / gamma(a[[1]] / d + 1)
+                producto = d^n * gamma(a[[1]] / d + n) / gamma(a[[1]] / d)
             )
         )
     }
