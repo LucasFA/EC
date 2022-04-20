@@ -35,8 +35,14 @@ mean(edad[sexo.f == "mujer"])
 # tapply
 help("tapply")
 tapply(edad, sexo.f, mean)
+aggregate(edad, by = list(sexo.f), mean)
+
 tapply(edad, sexo.f, sd)
+aggregate(edad, list(sexo.f), sd)
+
 tapply(edad, sexo.f, summary)
+aggregate(edad, list(sexo.f), summary)
+
 tapply(edad, civil.f, summary)
 # plotting
 boxplot(edad ~ sexo.f)

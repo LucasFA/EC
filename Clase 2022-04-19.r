@@ -39,6 +39,8 @@ hatco.grandes[sample(seq_len(nrow(hatco.grandes)), 1), ]
 
 # Alternativa más elegante y corta:
 aggregate(x = hatco, by = list(hatco$x8), FUN = sample, 1)
+# Nota: observa que se ha añadido la columna Group.1 al df. Si la quitamos:
+aggregate(x = hatco, by = list(hatco$x8), FUN = sample, 1)[-1]
 
 # --------------------------------------------------------------------------------
 # 5
