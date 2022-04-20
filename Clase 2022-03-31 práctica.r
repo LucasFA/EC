@@ -121,10 +121,12 @@ medias(c(1:10, NA))
 medias(0:10)
 medias(-1:10)
 
+# --------------------------------------------------------------------------------
+
 naive_mediana <- function(x) {
     # vector => vector ordenado => punto medio del vector ordenado
     ordenado <- sort(x)
-    if (length(x) %% 2) {
+    if (length(x) %% 2 == 1) {
         ordenado[length(x) / 2 + 1]
     } else {
         mean(c(ordenado[length(x) / 2], ordenado[length(x) / 2 + 1]))
@@ -149,3 +151,38 @@ set.seed(1)
 test <- runif(20)
 sort(test)
 mediana(test)
+
+# --------------------------------------------------------------------------------
+# Cuantiles WIP
+cuartiles <- function(x, na.rm = T) {
+    if (!is.numeric(x)) {
+        stop("Argumento no es numérico.")
+    }
+    if (na.rm) {
+        x <- x[!is.na(x)]
+    }
+
+    xord <- sort(x)
+    n <- length(x)
+    ## Q1 ocupa la posición (n+1)/4 (interpolando si es decimal)
+    pos.Q1 <- (n + 1) / 4
+    i <- trunc(pos.Q1)
+    Q1 <- x[i] + (pos.Q1 - i) * (x[i + 1] - x[i])
+    ## Q2 es la mediana
+    if (n %% 2 == 0) {
+          Q2 <- (xord[n / 2] + xord[1 + n / 2]) / 2
+      } else {
+        Q2 <- xord[ceiling(n / 2)]
+    }
+    ## Q3 ocupa la posición 3*(n+1)/4 (interpolando si es decimal)
+    pos.Q3 <- 3 * (n + 1) / 4
+    i <- trunc(pos.Q3)
+    Q3 <- x[i] + (pos.Q3 - i) * (x[i + 1] - x[i])
+
+    return(list(Q1 = Q1, Q2 = Q2, Q3 = Q3))
+}
+
+cuartiles(1:9)
+cuartiles(1:10)
+quantile(1:9,c(.25,.5,.75))
+quantile(1:10,c(.25,.5,.75))
