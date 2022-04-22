@@ -170,8 +170,8 @@ cuartiles <- function(x, na.rm = T) {
     Q1 <- x[i] + (pos.Q1 - i) * (x[i + 1] - x[i])
     ## Q2 es la mediana
     if (n %% 2 == 0) {
-          Q2 <- (xord[n / 2] + xord[1 + n / 2]) / 2
-      } else {
+        Q2 <- (xord[n / 2] + xord[1 + n / 2]) / 2
+    } else {
         Q2 <- xord[ceiling(n / 2)]
     }
     ## Q3 ocupa la posición 3*(n+1)/4 (interpolando si es decimal)
@@ -184,5 +184,5 @@ cuartiles <- function(x, na.rm = T) {
 
 cuartiles(1:9)
 cuartiles(1:10)
-quantile(1:9,c(.25,.5,.75))
-quantile(1:10,c(.25,.5,.75))
+quantile(1:9, c(.25, .5, .75))
+quantile(1:10, c(.25, .5, .75))
