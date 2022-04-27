@@ -3,8 +3,12 @@ rm(list = ls())
 
 data(cars, package = "datasets")
 plot(cars$speed, cars$dist)
+abline(line(cars$speed, cars$dis))
 
-# --------------------------------------------------------------------------------
+#
+# --- 4.1.1 - PLOT ---------------------------------------------------------------
+#
+
 
 plot(cars$speed, cars$dist,
     main = "Diagrama de dispersión",
@@ -29,7 +33,9 @@ plot(ChickWeight$Diet, main = "Un factor")
 class(Titanic)
 plot(Titanic, main = "Una tabla cruzada con tres factores de clasificación")
 
-# --------------------------------------------------------------------------------
+#
+# --- 4.1.2 - CURVE --------------------------------------------------------------
+#
 
 curve(x^3 - 3 * x, -2, 2, ylab = expression(f(x) == x^3 - 3 * x))
 
@@ -56,15 +62,21 @@ curve(dnorm(x, 0, 0.5), add = T, col = 2)
 curve(dnorm(x, 3, 1), add = T, col = 3)
 title(main = "Funciones de densidad")
 
-# --------------------------------------------------------------------------------
-# symbols
+
+#
+# --- 4.1.3 SYMBOLS --------------------------------------------------------------
+#
+
 n <- 10
 set.seed(1)
 x <- runif(n)
 colores <- rainbow(n)
 symbols(1:n, x, circles = x, bg = colores, ylim = c(0, 1.5), xlim = c(0, 11))
 
-# --------------------------------------------------------------------------------
+#
+# --- 4.1.4 AÑADIR ELEMENTOS A GRÁFICO. LOW LEVEL PLOTTING ------------------------
+#
+
 # points
 set.seed(123)
 plot(rnorm(10),
@@ -145,3 +157,55 @@ legend("topright",
     lwd = 2
 )
 graphics.off()
+
+# --------------------------------------------------------------------------------
+# Otras funciones
+
+# Ejemplo con polygon() y segments()
+plot(1:9,
+    type = "n", xlab = "", ylab = "", axes = FALSE,
+    main = "Ejemplos polygon(), segments()"
+)
+polygon(c(4, 6, 6, 4, NA, 6, 8, 7), c(2, 2, 4, 4, NA, 6, 6, 8),
+    density = c(10, 20), angle = c(-45, 45), col = c("red", "darkblue")
+)
+segments(
+    x0 = c(3, 2), y0 = c(6, 7), x1 = c(3, 4), y1 = c(8, 7),
+    lwd = 2, col = "green"
+)
+# Ejemplo con axis() y title()
+plot(Orange$circumference, Orange$age,
+    xaxt = "n",
+    xlab = "", ylab = ""
+)
+x <- quantile(Orange$circumference, probs = c(0.01, 0.25, 0.5, 0.75, 0.99))
+xcm <- x / 10 ## x está en milímetros, xcm en centímetros
+axis(1, at = x, labels = round(xcm, 1))
+abline(v = x, lty = 3, lwd = 3, col = "lightgray")
+title(
+    main = "Ejemplo de axis() y grid()",
+    sub = "Datos Orange",
+    xlab = "x = circunferencia (cm)",
+    ylab = "y = edad (días desde 1968/12/31)"
+)
+
+#
+# --- 4.1.5 OPCIONES. FUNCIÓN `par` -------------------------------------------------
+#
+
+par(mfrow = c(2, 2)) # matriz de 2x2 gráficos (se rellenan por filas)
+curve(dnorm(x), -3, 3, main = "Gráfico 1: Normal estándar")
+curve(dt(x, df = 10), -3, 3, main = "Gráfico 2: t de Student")
+curve(dchisq(x, df = 5), 0, 20, main = "Gráfico 3: chi-cuadrado")
+curve(df(x, df1 = 20, df2 = 10), 0, 5, main = "Gráfico 4: F de Snedecor")
+
+par(
+    mar = c(3.5, 3.5, 2.5, 1.5), oma = c(1, 1, 1, 1), mgp = c(1.5, 0.5, 0),
+    cex.axis = 0.8, cex.lab = 0.8, cex.main = 1, col.lab = "blue", bty = "n"
+)
+
+par(mfrow = c(2, 2)) # matriz de 2x2 gráficos (se rellenan por filas)
+curve(dnorm(x), -3, 3, main = "Gráfico 1: Normal estándar")
+curve(dt(x, df = 10), -3, 3, main = "Gráfico 2: t de Student")
+curve(dchisq(x, df = 5), 0, 20, main = "Gráfico 3: chi-cuadrado")
+curve(df(x, df1 = 20, df2 = 10), 0, 5, main = "Gráfico 4: F de Snedecor")
