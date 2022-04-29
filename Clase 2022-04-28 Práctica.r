@@ -191,3 +191,8 @@ summary(fit)
 # Su R^2 es de 0.48 y una pendiente de 2.43 (unidades correspondientes)
 
 cor(Wind, Temp)
+
+fit <- lm(Ozone ~ Temp * Wind) # probar tanto con * como con +
+fit
+summary(fit)
+plot(fit)
