@@ -170,7 +170,7 @@ aggregate(airquality$Ozone, by = list(airquality$Month), FUN = boxplot)
 # niveles de ozono en el aire. Esto se reduce en septiembre salvo en algunos casos,
 # posiblemente correspondientes a algún lugar en el que la causa común,
 # posiblemente la temperatura, se prolongue.
-dev.off()
+
 # 6
 fit <- lm(Ozone ~ Wind)
 plot(Ozone ~ Wind)
