@@ -88,5 +88,19 @@ anova(mod2)
 # Observamos, si comparamos con el sumario y anova del mod1, que ka regresión se ajusta mejor, puesto
 # que los p-valores son aún más reducidos en varias de las variables: eliminar los datos anómalos hace que nos ajustemos
 # mejor al modelo
-# Tampoco es una sorpresa, claro, precisamente hemos eliminado los datos que en cualquier caso son los que argumentan que el modelo
-# es algo dudoso o no bien ajustado
+# Tampoco es una sorpresa, claro, precisamente hemos eliminado los datos que en cualquier caso son
+# los que argumentan que el modelo es algo dudoso o no bien ajustado
+
+# Multicolinearidad
+R <- cor(hatco[, 6:12])
+ai <- eigen(R)$values
+sqrt(max(ai) / min(ai))
+# 16.67
+# VIF:
+vif(mod2)
+# velocidad, precio y servconj tienen todos un vif > 30
+
+# --------------------------------------------------------------------------------
+# Selección de variables explicativas
+step(mod2)
+step(mod2, direction = "both")
