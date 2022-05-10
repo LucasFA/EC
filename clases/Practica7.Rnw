@@ -1,0 +1,271 @@
+\documentclass[12pt]{article}
+\usepackage{url}
+\usepackage{breakurl}
+
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+
+\usepackage[T1]{fontenc}
+
+\usepackage[spanish,es-tabla,es-nodecimaldot]{babel}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{graphicx}            
+\usepackage{amsfonts}
+\usepackage{natbib}
+\usepackage{float}
+\usepackage{xspace}
+
+ \textwidth 16cm
+ \evensidemargin 0.2cm
+ \oddsidemargin  0.2cm
+ \topmargin -0.2cm
+  \textheight 22cm
+
+\setlength{\parindent}{0cm} % no indent párrafos
+
+\newcommand{\pbox}[1]{\fbox{\parbox[h]{15.8cm}{#1}}}
+\newcommand{\txr}[1]{\textcolor{red}{#1}}
+\newcommand{\txg}[1]{\textcolor{green}{#1}}
+\newcommand{\txb}[1]{\textcolor{blue}{#1}}
+
+\def\bbeta{\boldsymbol{\beta}}
+\def\eepsilon{\boldsymbol{\epsilon}}
+\newcommand{\R}{\mathbb{R}}
+
+\addto\captionsspanish{\renewcommand{\chaptername}{Tema}}
+
+\title{{\Huge \textbf{Estad\'istica Computacional}} \\ {\large Grado en Matem\'aticas} }
+\author{Mar\'ia Dolores Mart\'inez Miranda \\ mmiranda@ugr.es \\ \ \\ Departamento de Estad\'istica e I.O. \\ Universidad de Granada}
+\date{}
+
+\begin{document}
+
+
+<<setup, include=FALSE, cache=FALSE>>=
+library(knitr)
+# set global chunk options
+opts_chunk$set(fig.align='center', fig.show='hold')
+options(formatR.arrow=TRUE,width=90)
+@
+
+
+
+\centerline{\huge{Práctica 7: Gráficos de variables estadísticas}}
+\vskip 1cm
+En esta práctica nuestro objetivo es realizar un análisis descriptivo y exploratorio básico de un conjunto de datos. Para ello utilizaremos las funciones gráficas de R que hemos visto en la primera parte del Tema 4, y alguna más que introduciremos en este guión. Verás que muchos de los gráficos que se muestran a continuación admiten mejoras relativas a la apariencia (colores, márgenes, títulos etc.). Para no desviar la atención, esta tarea la dejaremos en un segundo plano durante la sesión de prácticas, centrándonos en los aspectos más importantes. No obstante muchas de estas posibles mejoras pueden ser un buen ejercicio para conocer en más profundidad las funciones. En este sentido se dejan como tareas propuestas.
+
+\section{Análisis de datos de empleados}
+
+Comenzamos analizando los datos almacenados en el fichero \emph{Employee.txt} en PRADO. Se trata de un conjunto de datos hipotético que corresponden a 473 empleados/as de un banco para los que se han recogido las siguientes variables:
+\begin{center}
+\begin{tabular}{ll}
+Variables & Descripción\\\hline
+salary & Salario actual (dólares) \\
+age & Edad\\
+edu & Nivel educativo (años)\\
+startsal& Salario inicial  (dólares) \\
+jobtime &Número de meses desde que fue contratado/a\\
+prevexp &Experiencia previa anterior al contrato (meses)\\
+minority &Clasificación étnica (\emph{min}, \emph{no\_min})\\
+gender & Sexo (\emph{f}, \emph{m})\\
+jobcat& Categoría laboral (\emph{clerical}, \emph{custodial}, \emph{manager}) \\\hline
+\end{tabular}
+\end{center}
+\vskip 0.3cm
+\pbox{\txb{Previa inspección del fichero (desde por ejemplo el bloc de notas), carga los datos en R. Hazlo de modo que  se almacenen en un objeto de tipo data frame, con nombre \texttt{employee}, en el que las variables \emph{gender}, \emph{jobcat} y \emph{minority} se consideren como factores. Una vez almacenados renombra los niveles del factor \texttt{gender} como \texttt{female} y \texttt{male}.}}
+\vskip 0.3cm
+<<echo=FALSE,eval=TRUE>>=
+employee<-read.table('employee.txt',header=TRUE,as.is=NA)
+levels(employee$gender)<-c('female','male')
+@
+Para simplificar el código que aparece a continuación coloca el data frame que has creado en la lista de búsqueda de R escribiendo:
+
+<<echo=TRUE,prompt=TRUE,comment=NA>>=
+attach(employee)
+@
+recuerda que con esto ya podrás referirte en el código a las columnas del data frame directamente por su nombre (sin necesidad de escribir delante \verb"employee$").
+
+
+\subsection{Variables cuantitativas: resúmenes y gráficos}
+
+En los datos podemos identificar como variables cuantitativas:
+\texttt{salary}, \texttt{startsal}, \texttt{age}, \texttt{jobtime}, \texttt{prevexp} y \texttt{edu}\footnote{Esta última también podría considerarse como un factor ordinal.}. Por su naturaleza podríamos considerar las dos primeras como continuas y resto como discretas. No obstante hemos de ser conscientes de que todas se han medido de una forma dicretizada (números enteros), hecho que tendremos que tener en cuenta  a la hora de leer e interpretar los resultados.
+\subsubsection*{Variable \texttt{salary}}
+Comenzamos analizando la variable \texttt{salary}. Un histograma es quizá la forma más  básica de representar datos de tipo continuo. La función \texttt{hist} nos permite obtener este tipo de gráfico. Su uso básico en este caso sería:
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.5\\linewidth',fig.align = 'center'>>=
+hist(salary)
+@
+Esto nos muestra un histograma con las opciones por defecto de la función. Entre ellas vemos que se definen 13 intervalos para \texttt{salary}, todos de la misma amplitud, que se muestran en el eje de horizontal, y asociado a cada intervalo se representa un rectángulo con base definida por los límites del intervalo y altura la frecuencia absoluta correspondiente al intervalo. Los valores usados para el gráfico se pueden visualizar asignando el resultado de la función a un objeto e inspeccionando su contenido:
+<<echo=TRUE,prompt=TRUE,comment=NA,fig.show=FALSE>>=
+res<-hist(salary,plot=FALSE)
+res
+@
+A continuación vamos a hacer dos modificaciones de este histograma. La primera incrementando el número de intervalos a 100 y la segunda definiendo intervalos de distinta amplitud (más pequeña para los primeros, algo más grandes para los centrales y mayor para los últimos). Para ello modificamos el argumento \texttt{breaks}:
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.4\\linewidth',fig.align = 'center'>>=
+hist(salary,breaks=100)
+# puntos de corte para intervalos con distinta amplitud
+x1 <-seq(15000,40000,by=5000)
+x2 <-seq(50000,80000,by=10000)
+x3 <-seq(100000,140000,by=20000)
+hist(salary,breaks=c(x1,x2,x3))
+@
+Observa que cuando construimos el gráfico con intervalos de distinta amplitud se representa la densidad de frecuencia (frecuencia dividida por amplitud) en lugar de la frecuencia absoluta. En el caso de amplitudes iguales también se podría construir el histograma representando densidades de frecuencia\footnote{Para ello solo tendrías que incluir el argumento \texttt{freq=FALSE}.},  si bien el gráfico sería equivalente al de  frecuencias absolutas.
+
+Un histograma nos da una representación de la distribución de frecuencias y consiste además en un estimador (no paramétrico) de la función de densidad de la variable. Una versión suavizada de este estimador se puede obtener usando la función \texttt{density}\footnote{Esta función calcula lo que se conoce como estimador tipo núcleo de la densidad (\emph{kernel density estimator}). De este tipo de estimadores nos ocuparemos en el Tema 7.}, que podemos superponer al histograma usando la función \texttt{lines}:
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.5\\linewidth',fig.align = 'center'>>=
+hist(salary,breaks=c(x1,x2,x3))
+lines(density(salary),col='blue')
+@
+\vskip 0.5cm
+\pbox{\txb{Sobre gráfico anterior dibuja también la función de densidad de una Normal cuya media y desviación típica sean las de los datos de \texttt{salary}. ¿Te parece que este podría ser un buen modelo de probabilidad para describir estos datos?}}
+\vskip 0.5cm
+<<echo=FALSE,eval=FALSE>>=
+hist(salary,breaks=c(x1,x2,x3))
+lines(density(salary),col='blue')
+curve(dnorm(x,mean=mean(salary),sd=sd(salary)),add=TRUE,col='red',lty=2)
+legend('topright',c('Función de densidad suavizada','Función de densidad Normal'),lty=1:2,col=c('blue','red'))
+@
+
+El modelo de probabilidad Normal se asume como hipótesis en gran parte de los métodos de la Estadística clásica. Los histogramas y los gráficos de densidad que hemos construido antes nos dan una primera idea de la validez de dicha hipótesis. No obstante un gráfico más adecuado es el denominado gráfico probabilístico normal, que es un caso particular de los gráficos cuantil-cuantil (QQ-plot). Este tipo de gráfico lo podemos obtener con la función \texttt{qqnorm} y representa  los cuantiles de la muestra de datos frente a los cuantiles de la distribución Normal. Para los datos de salarios sería:
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.5\\linewidth',fig.align = 'center'>>=
+qqnorm(salary)
+@
+Si la distribución Normal fuera el modelo de probabilidad desde que se generaron los datos entonces deberíamos observar que los puntos están aproximadamente alineados\footnote{Usando la función \texttt{qqline}, esto es, escribiendo \texttt{qqline(salary)}, puedes superponer una línea al gráfico para una mejor apreciación visual de la posible forma lineal.}. Este no parece ser el caso de nuestros datos sino que los puntos muestran una forma claramente curvilínea. Para confirmar esto podemos plantear un contraste de hipótesis del tipo: $H_0:$la variable salario sigue una distribución Normal; $H_1:$sigue otro tipo de distribución. Algunas posibles soluciones a este problema nos las dan los  contrastes de Kolmogorov-Smirnov y Shapiro-Wilks, que podemos obtener usando la función \texttt{ks.norm} y \texttt{shapiro.test}, respectivamente, como sigue:
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.4\\linewidth',fig.align = 'center'>>=
+ks.test(salary,pnorm,mean=mean(salary),sd=sd(salary))
+shapiro.test(salary)
+@
+El primer test nos muestra una advertencia indicando que en \texttt{salary} hay \emph{ties}, esto es, valores repetidos. Esto no tiene mucho sentido si la distribución es continua, no obstante en nuestro caso está asociado a que las observaciones se han recogido discretizadas. Ignorando esta advertencia, el resultado de ambos test es el mismo: se rechaza $H_0$. Esto lo podemos concluir observando el p-valor (\texttt{p-value}) resultante, que en ambos casos es muy pequeño, por debajo de \texttt{2.2e-16}. Por tanto no sería adecuado modelizar estos datos con una Normal.\footnote{Esto es bastante habitual con datos correspondientes a salarios, es común observar distribuciones que, a diferencia de la Normal, son asimétricas con una cola pronunciada a la derecha asociada a que hay unos pocos individuos que reciben un salario notablemente mayor que el resto. Para representar este tipo de distribuciones pueden ser más adecuadas densidades de tipo log-Normal o Gamma.}
+\vskip 0.5cm
+Otro gráfico muy habitual y útil para explorar la distribución de variables de tipo continuo son los comúnmente denominados diagramas de ``cajas con bigotes''  (\emph{boxplots}). La función \texttt{boxplot} nos permite construir este tipo de gráficos. De nuevo comenzamos haciendo un uso básico de la función:
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.5\\linewidth',fig.align = 'center'>>=
+boxplot(salary)
+@
+La caja se extiende desde el primer hasta el tercer cuartil y la línea que divide la caja se sitúa en la mediana. Los ``bigotes'' representan el rango de la variable, salvo que haya datos anómalos (\emph{outliers}), como ocurre en estos datos, en cuyo caso estos se representan (por defecto) como puntos. Podemos comprobar los valores mostrados en el gráfico imprimiendo un resumen numérico de la variable:
+<<echo=TRUE,prompt=TRUE,comment=NA>>=
+summary(salary)
+@
+\vskip 0.5cm
+Observando un gráfico de cajas también podemos identificar posibles desviaciones respecto a un modelo Normal. Por ejemplo podemos construir el siguiente gráfico que superpone  histograma, densidad suavizada y gráfico de cajas:
+
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.5\\linewidth',fig.align = 'center'>>=
+hist(salary,probability=TRUE,main="",axes=FALSE)
+axis(1)
+lines(density(salary),col='red',lwd=2)
+par(new=TRUE)  ## Para que el próximo gráfico se superponga al anterior
+boxplot(salary,horizontal=TRUE, axes=FALSE,lwd=2)
+@
+\vskip 0.5cm
+Por otro lado podemos utilizar un gráfico de cajas para comparar la distribución del salario entre hombres y mujeres, así como entre los que corresponden o no a una minoría étnica. También en relación a la categoría profesional. Podemos obtener algunos gráficos adecuados para estos objetivos como sigue:
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.4\\linewidth',fig.align = 'center'>>=
+boxplot(salary~gender)
+boxplot(salary~minority)
+boxplot(salary~jobcat)
+# A continuación salario con una doble clasificación
+boxplot(salary~gender*jobcat)
+@
+Observa la gran discrepancia entre los salarios de hombres y mujeres, incluso teniendo ambos la misma categoría profesional (como nos muestra el último gráfico donde se representa \texttt{salary} cruzando los niveles de \texttt{gender} y \texttt{jobcat}).
+
+\vskip 0.5cm
+\pbox{\txb{Realiza un análisis similar con las variables \texttt{startsal} y \texttt{age}. }}
+\vskip 0.5cm
+
+\subsubsection*{Análisis conjunto de dos variables: \texttt{salary} y \texttt{startsal}}
+
+Un diagrama de dispersión permite visualizar la posible relación que existe entre dos variables cuantitativas. En nuestros datos podría pensarse en que esto ocurra por ejemplo con las variables salario y salario inicial. Para visualizar esta relación utilizamos la función \texttt{plot}:
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.5\\linewidth',fig.align = 'center'>>=
+plot(startsal,salary)
+@
+El gráfico resultante nos muestra que parece existir una fuerte relación lineal entre ambas variables. Esta relación la podemos describir a través de un modelo de regresión lineal simple ($salary= \beta_0+ \beta_1*startsal+ \epsilon$). El ajuste del modelo a los datos lo podemos obtener usando la función \texttt{lm} y superponerlo al gráfico anterior usando la función \texttt{abline}:
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.5\\linewidth',fig.align = 'center'>>=
+mod<-lm(salary~startsal)
+mod
+plot(startsal,salary)
+abline(mod,col='blue')
+@
+Observa que la pendiente de la recta $\beta_1$, que a partir de los datos se estima en \Sexpr{round(mod$coef[2],2)} nos dice que un incremento de una unidad (1 dólar) en  \texttt{startsal} supone un incremento en media de \texttt{salary} de aproximadamente \Sexpr{round(mod$coef[2],2)} unidades\footnote{El error de esta estimación lo podemos calcular a partir del resultado que nos da la función \texttt{lm}. Esto junto con un  profundización en este tipo de modelos y la función \texttt{lm} lo dejamos para la próxima sesión.}.
+\vskip 0.5cm
+\pbox{\txb{Realiza un estudio similar que permita descubrir una posible relación entre: (i) las variables \texttt{salary} y \texttt{age}; y (ii) las variables \texttt{salary} y \texttt{edu}. ¿Qué puedes interpretar de los gráficos? }}
+\vskip 0.5cm
+
+
+\newpage
+\subsection{Variables cualitativas: tablas de frecuencias y gráficos}
+
+Para resumir y describir de forma numérica la información relativa a variables cualitativas de tipo factor (como son \texttt{gender}, \texttt{jobcat} y \texttt{minority}) podemos construir tablas de frecuencias (absolutas o relativas) unidimensionales. Para ello disponemos de las funciones \texttt{table} y \texttt{prop.table}, para frecuencias absolutas y relativas, respectivamente. Para la variable \texttt{jobcat} las obtenemos como sigue:
+
+<<echo=TRUE,prompt=TRUE,comment=NA>>=
+tab<-table(jobcat)
+tab # frecuencias absolutas
+tab.fi<-prop.table(tab)
+tab.fi # frecuencias relativas
+# construimos una tabla clásica de frecuencias
+data.frame(tab,Freq.rel=as.numeric(tab.fi))
+@
+
+Las funciones \texttt{barplot} y \texttt{pie} permiten realizar diagramas de barras y de sectores, respectivamente. Para la variable \texttt{catlab} escribiríamos:
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.4\\linewidth',fig.align = 'center'>>=
+barplot(tab)
+pie(tab)
+@
+
+\vskip 0.3cm
+\pbox{\txb{Realiza un análisis similar para los otros dos factores (\texttt{gender} y \texttt{minority}). }}
+\vskip 0.5cm
+
+El estudio anterior también se puede hacer considerando conjuntamente dos (o incluso los tres factores). Por ejemplo podemos construir una tabla de frecuencias cruzada, o tabla de contingencia, que nos indique las frecuencias correspondientes a los factores \texttt{jobcat} y \texttt{gender} conjuntamente.
+<<echo=TRUE,prompt=TRUE,comment=NA>>=
+tab2<-table(jobcat,gender)
+tab2
+# Y podemos añadir las sumas por filas y columnas
+addmargins(tab2)
+@
+Este tipo de tablas de contingencia se pueden visualizar por ejemplo utilizando diagramas de barras agrupadas o apiladas. Para ello usamos la función \texttt{barplot}. Su uso básico requiere proporcionar como argumento la tabla de contingencia (con los  factores \texttt{jobcat} y \texttt{gender}) que hemos almacenado en el objeto \texttt{tab2}:
+
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.4\\linewidth',fig.align = 'center'>>=
+barplot(tab2)
+@
+Observa que el gráfico resultante es un diagrama de barras apiladas. Muestra una barra para cada nivel del segundo factor de clasificación (\texttt{gender}), y a su vez cada barra se divide en porciones de acuerdo a los niveles del primer factor de clasificación (\texttt{jobcat})\footnote{El orden de los factores en el gráfico se puede cambiar si se desea pasando como argumento la tabla traspuesta, esto es, \verb"barplot(t(tab2))"}. Si bien el gráfico es correcto su apariencia admite muchas mejoras, una esencial es incluir alguna leyenda que permita identificar las porciones en las barras apiladas. A continuación incluimos este leyenda a la vez que realizamos algunas posibles mejoras:
+
+<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.4\\linewidth',fig.align = 'center'>>=
+barplot(tab2,legend.text=TRUE, args.legend=list(x='topleft',bty='n'),
+        ylim=c(0,300), density=30,col=c('green','blue','red'),
+        main='Number of employees by gender and job category')
+barplot(tab2,legend.text=TRUE, args.legend=list(x='top',bty='n'),
+        density=30,col=c('green','blue','red'),
+        main='Number of employees by gender and job category',
+        beside=TRUE)
+@
+
+\pbox{\txb{Construye una tabla de contingencia que muestre la clasificación de los individuos según \texttt{jobcat} y \texttt{minority}. Representa un diagrama de barras que muestre dicha clasificación.}}
+
+<<echo=FALSE,eval=FALSE>>=
+tab2<-table(jobcat,gender)
+@
+
+\vskip 1cm
+\section{Ejercicio propuesto}
+
+El data frame \texttt{airquality} del paquete \emph{datasets} contiene datos relativos a la calidad del aire en Nueva York. A partir de dichos datos escribe el código que permita resolver las siguientes tareas:
+
+\begin{enumerate}
+\item Construir un histograma del contaminante \texttt{Ozone} considerando intervalos de amplitud 10.
+
+\item Superponer al histograma anterior  la función de densidad de una distribución Normal cuyos parámetros media y desviación típica sean las de los datos \texttt{Ozone}. ¿Te parece que estos datos se podrían modelizar mediante ese modelo de probabilidad?
+
+\item Construir un gráfico de normalidad para la variable \texttt{Ozone}. ¿Qué te indica el gráfico? Confirmar el resultado con un contraste de hipótesis.
+
+\item Construir un diagrama de cajas del contaminante \texttt{Ozone}. ¿Qué puedes interpretar del gráfico?
+
+\item Construir un diagrama de cajas múltiple del contaminante \texttt{Ozone} que permita comparar sus valores en los meses de mayo, junio, julio, agosto y septiembre. ¿Qué puedes interpretar del gráfico?
+
+\item Construir dos diagramas de dispersión que nos permita visualizar la posible relación entre: (i) la velocidad del viento, \texttt{Wind}, y el contaminante \texttt{Ozone}; y (ii) la temperatura, \texttt{Temp}, y \texttt{Ozone}.  ¿Qué puedes interpretar de los gráficos?
+
+\end{enumerate}
+
+
+
+\end{document}
+
+
