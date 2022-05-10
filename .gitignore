@@ -5,6 +5,12 @@
 ### I/O ###
 /Outputfiles/*
 
+### TeX ###
+*.aux
+*.pdf
+*.log
+*.out
+
 ### R ###
 # History files
 .Rhistory
