@@ -34,7 +34,7 @@ plot(hatco[, c(6:13)], )
 Nos preguntamos sobre la relación lineal entre variables explicativas y explicadas. En algunas variables es significativa
 
 En cuanto a colinealidad, parece significativa entre fidelidad y velocidad, entre velocidad y servconj, y entre servconj y fidelidad
-(relación lineal entre los 3)
+(relación lineal entre los tres)
 
 ```{r }
 mod1 <- lm(fidelidad ~ velocidad + precio + flexprec + imgfabri + servconj + imgfvent + calidadp, hatco)
@@ -47,14 +47,16 @@ mod1
 summary(mod1)
 ```
 
-Observamos que R^2 == 0.775, R^2 ajustado 0.758
+Observamos que $R^2 = 0.775$, $R^2 \text{ ajustado} = 0.758$
 
 ```{r }
 anova(mod1)
 ```
 
-Varias de las variables son estadísticamente no significativas
+Varias de las variables son estadísticamente no significativas.
 
+Hacemos una observación importante: ANOVA y el sumario del modelo dan resultados distintos en cuanto a la 
+importancia de varias variables. Eso sugiere que estén correlacionadas (por lo cual el cambio en una ya se ve reflejada implícitamente en el resto de datos)
 
 ## Otro modelo: factores
 
@@ -66,24 +68,24 @@ summary(otroMod)
 anova(otroMod)
 ```
 
-El R^2 ronda el 80%
-al nivel de significación 5%, todas las variables del mod2 son significativas salvo tindustr (con p-valor 0.13 > 0.05)
+El $R^2$ ronda el $80\%$
+al nivel de significación $5\%$, todas las variables del mod2 son significativas salvo tindustr (con $p$-valor $0.13 > 0.05$)
 
 ## Relevancia del término constante
-
+Recordamos de nuevo:
 ```{r }
 summary(mod1)
 ```
 
-p-valor del término constante: $0.044 < 0.05$. No se rechaza al nivel de significación 5%
-para el nivel de significación 1% sí se rechaza.
-Respectivamente, no podemos prescindir de ninguno de los 2
+$p$-valor del término constante: $p = 0.044 < 0.05$. No se rechaza al nivel de significación $5\%$
+para el nivel de significación $1\%$ sí se rechaza.
+Respectivamente, no podemos prescindir de ninguno de los dos.
 
 ```{r }
 summary(otroMod)
 ```
 
-p valor $p < 10^{-16} < 0.01$, no se puede prescindir del término constante ni al Nivel de significación $5%$ ni $1%$
+$p$ valor $p < 10^{-16} < 0.01$, no se puede prescindir del término constante ni al Nivel de significación $5\%$ ni $1\%$
 ────────────────────────────────────────────────────────────────────────────────
 
 ## Diagnóstico del modelo
@@ -156,7 +158,7 @@ influenceIndexPlot(mod1)
 ### Eliminación observaciones anómalas
 
 ```{r }
-hatco <- hatco[-c(7,100),]
+hatco <- hatco[-c(7, 100), ]
 mod2 <- lm(fidelidad ~ velocidad + precio + flexprec + imgfabri + servconj + imgfvent + calidadp, hatco)
 mod2
 
