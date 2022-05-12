@@ -6,6 +6,7 @@
 /Outputfiles/*
 
 ### TeX ###
+/figure/*
 *.aux
 *.pdf
 *.log
