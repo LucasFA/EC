@@ -76,7 +76,9 @@ jobcat& Categoría laboral (\emph{clerical}, \emph{custodial}, \emph{manager}) \
 \pbox{\txb{Previa inspección del fichero (desde por ejemplo el bloc de notas), carga los datos en R. Hazlo de modo que  se almacenen en un objeto de tipo data frame, con nombre \texttt{employee}, en el que las variables \emph{gender}, \emph{jobcat} y \emph{minority} se consideren como factores. Una vez almacenados renombra los niveles del factor \texttt{gender} como \texttt{female} y \texttt{male}.}}
 \vskip 0.3cm
 <<echo=FALSE,eval=TRUE>>=
-employee<-read.table('employee.txt',header=TRUE,as.is=NA)
+getwd()
+getwd()
+employee<-read.table('./inputfiles/Employee.txt',header=TRUE,as.is=NA)
 levels(employee$gender)<-c('female','male')
 @
 Para simplificar el código que aparece a continuación coloca el data frame que has creado en la lista de búsqueda de R escribiendo:
@@ -178,7 +180,7 @@ Un diagrama de dispersión permite visualizar la posible relación que existe en
 plot(startsal,salary)
 @
 El gráfico resultante nos muestra que parece existir una fuerte relación lineal entre ambas variables. Esta relación la podemos describir a través de un modelo de regresión lineal simple ($salary= \beta_0+ \beta_1*startsal+ \epsilon$). El ajuste del modelo a los datos lo podemos obtener usando la función \texttt{lm} y superponerlo al gráfico anterior usando la función \texttt{abline}:
-<<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.5\\linewidth',fig.align = 'center'>>=
+<<echo=TRUE,prompt=TRUE,comment=NA, eval=TRUE,out.width = '.5\\linewidth',fig.align = 'center'>>=
 mod<-lm(salary~startsal)
 mod
 plot(startsal,salary)
@@ -231,11 +233,13 @@ Observa que el gráfico resultante es un diagrama de barras apiladas. Muestra un
 <<echo=TRUE,prompt=TRUE,comment=NA,out.width = '.4\\linewidth',fig.align = 'center'>>=
 barplot(tab2,legend.text=TRUE, args.legend=list(x='topleft',bty='n'),
         ylim=c(0,300), density=30,col=c('green','blue','red'),
-        main='Number of employees by gender and job category')
+        main='Number of employees by gender and job category'
+)
 barplot(tab2,legend.text=TRUE, args.legend=list(x='top',bty='n'),
         density=30,col=c('green','blue','red'),
         main='Number of employees by gender and job category',
-        beside=TRUE)
+        beside=TRUE
+)
 @
 
 \pbox{\txb{Construye una tabla de contingencia que muestre la clasificación de los individuos según \texttt{jobcat} y \texttt{minority}. Representa un diagrama de barras que muestre dicha clasificación.}}
