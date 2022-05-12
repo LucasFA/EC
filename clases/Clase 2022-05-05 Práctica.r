@@ -1,5 +1,5 @@
 rm(list = ls())
-hatco <- read.csv("./Inputfiles/hatco2.csv", stringsAsFactors = TRUE)
+hatco <- read.csv("./inputfiles/hatco2.csv", stringsAsFactors = TRUE)
 
 str(hatco)
 head(hatco)
@@ -39,14 +39,14 @@ summary(otroMod)
 # Homocedasticidad
 residuos1.estandarizados  <- rstandard(mod1) # residuos estandarizados
 plot(mod1$fitted.values, residuos1.estandarizados)
-plot(xij, residuos1.estandarizados) # TODO:
+# plot(xij, residuos1.estandarizados) # TODO:
 # Incorrelación
 
-plot(hatco$empresa, e)
+# plot(hatco$empresa, e)
 library(lmtest)
 dwtest(mod1)
 # Hipótesis nula: autocorrelación de los errores es 0 ==> no se rechaza
-# Eso es, no rechazamos TODO: º
+# Eso es, no rechazamos que la autocorrelacion sea mayor que cero
 
 # Normalidad
 ks.test(residuos1.estandarizados, pnorm)
