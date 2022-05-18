@@ -52,6 +52,14 @@ plot(n, cumsum(x) / n,
 )
 abline(h = 0.5, lty = 2, col = 2)
 
+# alternativamente podríamos haber hecho:
+x <- rbinom(nsim, size = 1, prob = 0.5)
+head(x)
+# ó
+x <- runif(nsim) < 0.5
+head(x)
+
+
 # 5.3.2. Detección de problemas de convergencia
 # Esperanza no finita
 set.seed(1)
@@ -75,7 +83,7 @@ for (i in 2:4) {
     )
     abline(h = 0, lty = 2, col = 2)
 }
-# cajas para observar
+# cajas para observar cómo se comporta: muchos datos anómalos
 for (i in 2:4) {
     set.seed(i)
     x <- rcauchy(nsim)
