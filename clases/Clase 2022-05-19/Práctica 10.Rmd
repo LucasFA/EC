@@ -1,0 +1,71 @@
+---
+title: "Práctica 10"
+author: "Lucas Fehlau Arbulu"
+date: "19-05-2022"
+output:
+    html_document:
+        toc: true
+        number_sections: true
+        toc_float: true
+---
+
+
+```{r setup, include = FALSE}
+library(knitr)
+library(rmarkdown)
+opts_knit$set(root.dir = ".")
+opts_chunk$set(fig.cap = "")
+rm(list = ls())
+```
+
+# Práctica 10
+
+## Tarea 1
+### Aproximación de una probabilidad
+```{r }
+nsim <- 1000
+set.seed(1)
+x <- runif(nsim, -1, 1)
+y <- runif(nsim, -1, 1)
+suceso <- (x + y <= 0)
+# Aproximación
+mean(suceso)
+# Error de estimación
+sd(suceso) / sqrt(nsim)
+## Gráfico de convergencia
+# aproximaciones para $n=1,...,nsim$
+estim <- cumsum(suceso) / (1:nsim)
+# errores de estimación correspondientes
+estim.err <- sqrt(cumsum((suceso - estim)^2)) / (1:nsim)
+plot(1:nsim, estim,
+    type = "l", ylab = "Aproximación y límites de error",
+    xlab = "Número de simulaciones", main = expression(P(X + Y <= 0)),
+    ylim = c(0, 1)
+)
+z <- qnorm(0.025, lower.tail = FALSE)
+lines(estim - z * estim.err, col = "blue", lwd = 2, lty = 3)
+lines(estim + z * estim.err, col = "blue", lwd = 2, lty = 3)
+```
+
+La probabilidad real es $1/2$
+
+## Ejercicio:
+Aproximar mediante simulación la probabilidad $P(X^2 + Y^2 \leq 1)$. Compara con el valor exacto que vale $\pi/4$.
+# TODO: 
+
+## Tarea 2
+### Aproximación de una integral
+# TODO: copy code
+## Objetivo: 
+(Enunciado) Una vez visualizados los problemas, el objetivo es aproximar las dos integrales anteriores
+utilizando simulación. Para ello te sugiero que consideres 1000 simulaciones. Además
+de la aproximación obtenida calcula su error de estimación y construye un gráfico que
+muestre la convergencia junto con los límites de error.
+
+# TODO: Ejercicio
+
+Comparamos con los resultados de `integrate`
+# TODO: copy code
+
+## Tarea 3:
+### Aproximación de una distribución de probabilidad
