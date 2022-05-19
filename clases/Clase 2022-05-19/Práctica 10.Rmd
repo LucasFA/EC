@@ -17,10 +17,8 @@ opts_chunk$set(fig.cap = "")
 rm(list = ls())
 ```
 
-# Práctica 10
-
-## Tarea 1
-### Aproximación de una probabilidad
+# Tarea 1
+## Aproximación de una probabilidad
 ```{r }
 nsim <- 1000
 set.seed(1)
@@ -49,7 +47,7 @@ abline(h = 0.5, lwd = 0.5, lty = "dotted")
 
 La probabilidad real es $1/2$, valor en el cual se ha sobrepuesto una recta horizontal. Observamos que se ajusta.
 
-#### Ejercicio:
+### Ejercicio:
 (Enunciado) Aproximar mediante simulación la probabilidad $P(X^2 + Y^2 \leq 1)$. Compara con el valor exacto que vale $\pi/4$.
 ``` {r }
 nsim <- 1000
@@ -79,8 +77,8 @@ lines(estim + z * estim.err, col = "blue", lwd = 2, lty = 3)
 abline(h = pi / 4, lwd = 0.5, lty = "dotted")
 ```
 
-## Tarea 2
-### Aproximación de una integral
+# Tarea 2
+## Aproximación de una integral
 ```{r }
 # primera integral
 a <- 2.5
@@ -91,7 +89,7 @@ curve(f1(x), 0.2, 0.4)
 f2 <- function(x) sin(x) * exp(-x) * dbeta(x, a, b)
 curve(f2(x), 0, 1)
 ```
-#### Objetivo: 
+### Objetivo: 
 (Enunciado) Una vez visualizados los problemas, el objetivo es aproximar las dos integrales anteriores
 utilizando simulación. Para ello te sugiero que consideres $1000$ simulaciones. Además
 de la aproximación obtenida calcula su error de estimación y construye un gráfico que
@@ -99,7 +97,7 @@ muestre la convergencia junto con los límites de error.
 
 Vamos a ir comparando con el resultado de `integrate` directamente.
 
-##### Primera integral:
+#### Primera integral:
 ```{r}
 set.seed(1)
 lim_inf <- 0.2
@@ -139,7 +137,7 @@ abline(h = integral, lwd = 0.5, lty = "dotted")
 
 Donde la recta horizontal es el valor de la integral calculada numéricamente.
 
-##### Segunda integral:
+#### Segunda integral:
 ```{r}
 x <- runif(nsim)
 f2x <- sapply(x, f2)
@@ -154,7 +152,7 @@ all.equal(integral, mean(f2x))
 sd(f2x) / sqrt(nsim)
 ```
 
-Veamos el gráfico de convergencia y las aproximaciones para $n=1,...,nsim$
+Veamos el gráfico de convergencia y las aproximaciones para $n=1,...,n_{sim}$
 ```{r}
 estim <- cumsum(f2x) / (1:nsim)
 # errores de estimación correspondientes
@@ -172,5 +170,5 @@ abline(h = integral, lwd = 0.5, lty = "dotted")
 
 De nuevo, la recta horizontal es el valor de la integral calculada numéricamente.
 
-## Tarea 3:
-### Aproximación de una distribución de probabilidad
+# Tarea 3:
+## Aproximación de una distribución de probabilidad
