@@ -3,9 +3,8 @@ title: "Práctica 10"
 author: "Lucas Fehlau Arbulu"
 date: "19-05-2022"
 output:
-    html_document:
+    html_document: 
         toc: true
-        number_sections: true
         toc_float: true
 ---
 
@@ -45,27 +44,133 @@ plot(1:nsim, estim,
 z <- qnorm(0.025, lower.tail = FALSE)
 lines(estim - z * estim.err, col = "blue", lwd = 2, lty = 3)
 lines(estim + z * estim.err, col = "blue", lwd = 2, lty = 3)
+abline(h = 0.5, lwd = 0.5, lty = "dotted")
 ```
 
-La probabilidad real es $1/2$
+La probabilidad real es $1/2$, valor en el cual se ha sobrepuesto una recta horizontal. Observamos que se ajusta.
 
-## Ejercicio:
-Aproximar mediante simulación la probabilidad $P(X^2 + Y^2 \leq 1)$. Compara con el valor exacto que vale $\pi/4$.
-# TODO: 
+#### Ejercicio:
+(Enunciado) Aproximar mediante simulación la probabilidad $P(X^2 + Y^2 \leq 1)$. Compara con el valor exacto que vale $\pi/4$.
+``` {r }
+nsim <- 1000
+simular <- function(nsim, suceso, valor, seed = 1) {
+}
+set.seed(1)
+x <- runif(nsim, -1, 1)
+y <- runif(nsim, -1, 1)
+suceso <- (x^2 + y^2 <= 1)
+# Aproximación
+mean(suceso)
+# Error de estimación
+sd(suceso) / sqrt(nsim)
+## Gráfico de convergencia
+# aproximaciones para $n=1,...,nsim$
+estim <- cumsum(suceso) / (1:nsim)
+# errores de estimación correspondientes
+estim.err <- sqrt(cumsum((suceso - estim)^2)) / (1:nsim)
+plot(1:nsim, estim,
+    type = "l", ylab = "Aproximación y límites de error",
+    xlab = "Número de simulaciones", main = expression(P(X^2 + Y^2 <= 1)),
+    ylim = c(0, 1)
+)
+z <- qnorm(0.025, lower.tail = FALSE)
+lines(estim - z * estim.err, col = "blue", lwd = 2, lty = 3)
+lines(estim + z * estim.err, col = "blue", lwd = 2, lty = 3)
+abline(h = pi / 4, lwd = 0.5, lty = "dotted")
+```
 
 ## Tarea 2
 ### Aproximación de una integral
-# TODO: copy code
-## Objetivo: 
+```{r }
+# primera integral
+a <- 2.5
+b <- 5
+f1 <- function(x) dbeta(x, a, b)
+curve(f1(x), 0.2, 0.4)
+# segunda integral
+f2 <- function(x) sin(x) * exp(-x) * dbeta(x, a, b)
+curve(f2(x), 0, 1)
+```
+#### Objetivo: 
 (Enunciado) Una vez visualizados los problemas, el objetivo es aproximar las dos integrales anteriores
-utilizando simulación. Para ello te sugiero que consideres 1000 simulaciones. Además
+utilizando simulación. Para ello te sugiero que consideres $1000$ simulaciones. Además
 de la aproximación obtenida calcula su error de estimación y construye un gráfico que
 muestre la convergencia junto con los límites de error.
 
-# TODO: Ejercicio
+Vamos a ir comparando con el resultado de `integrate` directamente.
 
-Comparamos con los resultados de `integrate`
-# TODO: copy code
+##### Primera integral:
+```{r}
+set.seed(1)
+lim_inf <- 0.2
+lim_sup <- 0.4
+long <- lim_sup - lim_inf
+nsim <- 1000
+x <- runif(nsim, min = lim_inf, max = lim_sup)
+f1x <- sapply(x, f1)
+estim.integ <- f1x * long
+```
+Entonces la aproximación de la integral:
+```{r}
+mean(estim.integ)
+```
+Comparada con el valor calculado numéricamente:
+```{r}
+integral <- integrate(f1, 0.2, 0.4)$value
+integral
+all.equal(integral, mean(estim.integ))
+# Error de estimación
+sd(estim.integ) / sqrt(nsim)
+## Gráfico de convergencia
+# aproximaciones para $n=1,...,nsim$
+estim <- (cumsum(estim.integ) / (1:nsim))
+# errores de estimación correspondientes
+estim.err <- sqrt(cumsum((estim.integ - estim)^2)) / (1:nsim)
+plot(1:nsim, estim,
+    type = "l", ylab = "Aproximación y límites de error",
+    xlab = "Número de simulaciones",
+    main = expression("Aproximación de la integral")
+)
+z <- qnorm(0.025, lower.tail = FALSE)
+lines(estim - z * estim.err, col = "blue", lwd = 2, lty = 3)
+lines(estim + z * estim.err, col = "blue", lwd = 2, lty = 3)
+abline(h = integral, lwd = 0.5, lty = "dotted")
+```
+
+Donde la recta horizontal es el valor de la integral calculada numéricamente.
+
+##### Segunda integral:
+```{r}
+x <- runif(nsim)
+f2x <- sapply(x, f2)
+```
+Comparando con el valor calculado numéricamente:
+```{r}
+mean(f2x)
+integral <- integrate(f2, 0, 1)$value
+integral
+all.equal(integral, mean(f2x))
+# Error de estimación
+sd(f2x) / sqrt(nsim)
+```
+
+Veamos el gráfico de convergencia y las aproximaciones para $n=1,...,nsim$
+```{r}
+estim <- cumsum(f2x) / (1:nsim)
+# errores de estimación correspondientes
+estim.err <- sqrt(cumsum((f2x - estim)^2)) / (1:nsim)
+plot(1:nsim, estim,
+    type = "l", ylab = "Aproximación y límites de error",
+    xlab = "Número de simulaciones",
+    main = expression("Aproximación de la integral")
+)
+z <- qnorm(0.025, lower.tail = FALSE)
+lines(estim - z * estim.err, col = "blue", lwd = 2, lty = 3)
+lines(estim + z * estim.err, col = "blue", lwd = 2, lty = 3)
+abline(h = integral, lwd = 0.5, lty = "dotted")
+```
+
+De nuevo, la recta horizontal es el valor de la integral calculada numéricamente.
 
 ## Tarea 3:
 ### Aproximación de una distribución de probabilidad
