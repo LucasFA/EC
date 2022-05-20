@@ -17,8 +17,7 @@ opts_chunk$set(fig.cap = "")
 rm(list = ls())
 ```
 
-# Tarea 1
-## Aproximación de una probabilidad
+# Aproximación de una probabilidad
 ```{r }
 nsim <- 1000
 set.seed(1)
@@ -77,8 +76,7 @@ lines(estim + z * estim.err, col = "blue", lwd = 2, lty = 3)
 abline(h = pi / 4, lwd = 0.5, lty = "dotted")
 ```
 
-# Tarea 2
-## Aproximación de una integral
+# Aproximación de una integral
 ```{r }
 # primera integral
 a <- 2.5
@@ -170,5 +168,98 @@ abline(h = integral, lwd = 0.5, lty = "dotted")
 
 De nuevo, la recta horizontal es el valor de la integral calculada numéricamente.
 
-# Tarea 3:
-## Aproximación de una distribución de probabilidad
+# Aproximación de una distribución de probabilidad
+Supongamos que el número de reclamaciones a una aseguradora es $N\sim\mathcal{P}(17)$.
+Asociado a cada reclamación hay un pago $X_i$ con distribución lognormal con $\mu = 3.5$ y $\sigma = 1.1$.
+Entonces $S_n = \sum_{i=1}^N X_i$ es la cuantía total pagada por la aseguradora en un mes.
+Esta sería una distribución de Poisson compuesta.
+
+Podemos calcular exactamente la media y varianza de $S_n$.
+
+$$
+S_N = \sum_{i=1}^N X_i, \quad N\sim \mathcal{P}(\lambda)
+$$
+Su esperanza y varianza vienen dadas, respectivamente, por
+$$
+\begin{align*}
+    E[S_N]   =& \,E[N]E[X_1] \\
+    Var[S_N] =& \,E[N]Var[X_1] + Var(N)E[X_1]^2
+\end{align*}
+$$
+
+Recordando que para una variable aleatoria $X$ con distribución lognormal $\mu, \sigma$,
+$$
+\begin{align*}
+    E[X]    =& \, \exp(\mu + \frac{\sigma^2}{2}) \\
+    Var[X]  =& \, \left( \exp(\sigma^2) - 1 \right) \exp(2\mu + \sigma^2) \\
+            =& \, \left(\exp(\sigma^2) - 1\right)E[X]^2
+\end{align*}
+$$
+
+Calculamos estos valores:
+
+```{R}
+# Parámetros de la lognormal (X)
+mu <- 3.5
+sig <- 1.1
+# a partir de ellos calculamos E[X] y V(X)
+EX <- exp(mu + sig^2 / 2)
+EX
+VX <- EX^2 * (exp(sig^2) - 1)
+VX
+```
+La esperanza y varianza de la Poisson compuesta serían:
+```{r}
+lambda <- 17 # parámetro de la Poisson. Coincide con E[N] y V(N)
+# Media de la Poisson compuesta:
+ES <- lambda * EX
+ES
+# Varianza de la Poisson compuesta
+VS <- lambda * VX + lambda * EX^2
+VS
+```
+
+Ahora simulamos
+
+```{r}
+nsim <- 5000 # número de simulaciones
+# simulamos ahora nsim valores de S_N:
+S <- double(nsim) # para almacenar los valores simulados
+set.seed(1)
+for (i in 1:nsim) {
+    n <- rpois(1, lambda)
+    # if (n > 0) {
+    S[i] <- sum(rlnorm(n, mu, sig))
+    # }
+}
+# el vector S contiene los valores simulados de S_N
+# un histograma de S nos da una aproximación de la distribución
+hist(S, xlim = c(0, 7000), breaks = 20, prob = TRUE, ylim = c(0, 1.2e-3))
+# podemos superponer la densidad suavizada que calcula density()
+lines(density(S), col = "red")
+```
+
+### Ejercicio:
+(Enunciado) Calcula la media y la varianza de los `nsim` valores simulados de $S_N$. Estos nos dan
+aproximaciones de la media y la varianza exactas que calculamos antes de forma exacta.
+```{r}
+mean(S)
+var(S)
+```
+
+### Ejercicio:
+(Enunciado) Utilizando los valores que hemos simulado de $S_N$, aproximar el VaR. (Nota: Dado que se
+trata de calcular un cuantil de un vector de "datos" puedes usar la función `quantile()`.)
+
+```{r}
+quantile(S, probs = 0.995)
+```
+Que podemos comparar con el resultado de aproximar el valor por la normal:
+```{r}
+# aproximación por una Normal con media ES y varianza VS
+qnorm(0.995, mean = ES, sd = sqrt(VS))
+```
+
+Observamos que la simulación da una mayor valor al VaR. Esto es de esperar por
+la asimetría de las Poisson, mientras la normal es simétrica.
+Esto nos indica que la simulación nos da un mejor ajuste a la distribución real.
