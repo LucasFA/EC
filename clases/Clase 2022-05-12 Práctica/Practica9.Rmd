@@ -13,7 +13,6 @@ output:
 
 ```{r setup, include = FALSE}
 library(knitr)
-opts_knit$set(root.dir = ".")
 opts_chunk$set(fig.cap = "")
 rm(list = ls())
 ```
@@ -105,9 +104,9 @@ library(lmtest)
 dwtest(mod1)
 ```
 
-Hipótesis nula: autocorrelación de los errores es 0 ==> no se rechaza
-Eso es, no rechazamos que la autocorrelacion sea mayor que cero
-Normalidad
+Hipótesis nula: autocorrelación de los errores es 0. No se rechaza
+
+### Normalidad de residuos
 
 ```{r }
 ks.test(residuos1.estandarizados, pnorm)
@@ -124,6 +123,7 @@ crPlots(mod1)
 
 La mayoría de las variables se ajustan bastante bien a la recta.
 Velocidad no tan bien
+
 ## Datos anómalos
 
 ```{r }
