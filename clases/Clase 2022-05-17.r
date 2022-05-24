@@ -259,4 +259,4 @@ boxplot(w)
 mean(w)
 
 # error
-qnorm(0.025,lower.tail=FALSE)*sd(w)/sqrt(nsim)
+qnorm(0.025, lower.tail = FALSE) * sd(w) / sqrt(nsim)
