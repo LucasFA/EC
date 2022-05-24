@@ -11,8 +11,6 @@ output:
 
 ```{r setup, include = FALSE}
 library(knitr)
-library(rmarkdown)
-opts_knit$set(root.dir = ".")
 opts_chunk$set(fig.cap = "")
 rm(list = ls())
 ```
