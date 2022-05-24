@@ -307,6 +307,8 @@ lines(density(medianas), col = "blue")
 
 # Comparación de estimadores
 
+# Sea f una f densidad de una N(0,1) contaminada por una N(3,3) con frecuencias 0.95, 0.05 respectivamente.
+# Con el método de composición:
 n <- 100
 set.seed(1)
 j <- rbinom(n, 1, 0.05) # 1's y 0's indicando si es f2 o f1, respectivamente
@@ -315,9 +317,10 @@ x <- rnorm(n, 3 * j, 1 + 2 * j) # esto genera n valores de f1 o f2 dependiendo d
 hist(x, breaks = "FD", freq = FALSE, main = "Muestra contaminada")
 # superponemos la densidad desde la que se generó
 curve(0.95 * dnorm(x, 0, 1) + 0.05 * dnorm(x, 3, 3), add = TRUE, col = 2)
-
+# Con datos anómalos
 mean(x)
 median(x)
+# Dan resultados similares
 
 n <- 100
 set.seed(1)
@@ -331,8 +334,9 @@ medianas <- apply(muestras, 1, median)
 boxplot(medias, medianas, names = c("Media", "Mediana"))
 # una línea horizontal indicando el valor a estimar (mu=0)
 abline(h = 0, col = 2)
+# La media se ve bastante afectada por valores anómalos
 
-# errores cuadráticos medios
+# Estimamos los errores cuadráticos medios E[(theta_gorro - theta)^2]
 ecm.media <- mean((medias - 0)^2)
 ecm.media
 ecm.mediana <- mean((medianas - 0)^2)
