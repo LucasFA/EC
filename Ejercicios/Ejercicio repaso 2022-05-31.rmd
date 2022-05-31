@@ -31,18 +31,24 @@ lines(density(y))
 curve(dnorm(x, mean = mean(y), sd = sd(y)), add = TRUE)
 ```
 
+### 4
 ```{r}
-qqnorm(y) # TODO; what?
+qqnorm(y)
 qqline(y)
 ```
+Observamos que $y$ se asemeja a la normal, salvo en la cola derecha.
+
+### 5
 ```{r}
 boxplot(y)
 ```
 
+### 6
 ```{r}
 boxplot(x, y, names = c("x", "y"))
 ```
 
+### 7, 8
 ```{r}
 plot(x, y)
 modelo <- lm(y ~ x)
@@ -65,7 +71,9 @@ x <- rep(4, nsim)
 x <- sapply(x, apuesta)
 aprox <- mean(x)
 aprox
-print("Probabilidad exacta:")
+```
+Probabilidad exacta y comparación:
+```{r}
 exacta <- 1 - (5 / 6)^4
 exacta
 all.equal(aprox, exacta)
@@ -100,7 +108,6 @@ hist(X, freq = FALSE, breaks = "FD")
 lines(density(X))
 
 ks.test(X, F)
-# TODO: comprobar que esto ^ sea correcto
 ```
 # Ejecicio 4
 
@@ -120,7 +127,7 @@ estim.err <- sqrt(cumsum((Y - estim)^2)) / seq_len(nsim)
 plot(estim,
     type = "l",
     xlab = "Número de simulaciones",
-    ylab = "Estimación"
+    ylab = "Estimación de la integral"
 )
 
 z <- qnorm(0.975)
@@ -133,7 +140,7 @@ abline(h = exacto)
 prediccionfinal <- estim[[nsim]]
 all.equal(prediccionfinal, exacto)
 ```
-#### Cosa random que se me ocurrió para el ejercicio
+#### Cosa random de ensembles que se me ocurrió para el ejercicio
 ```{r}
 nsimensemble <- 100
 numensembles <- nsim / nsimensemble
