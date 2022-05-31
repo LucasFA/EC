@@ -1,0 +1,118 @@
+---
+title: "Ejercicios de repaso"
+author: "Lucas Fehlau Arbulu"
+date: "31-05-2022"
+output: 
+    html_document:
+        toc: true
+        number_sections: false
+        toc_float: true
+---
+
+# Ejecicio 1
+```{r}
+set.seed(1)
+y <- rchisq(n = 50, df = 30)
+x <- rnorm(n = 50, mean = 30, sd = 5)
+```
+### 1
+```{r}
+mean(y)
+sd(y)
+quantile(y, probs = c(0.25, 0.5, 0.75))
+```
+### 2
+```{r}
+hist(y, freq = FALSE, main = "Frecuencias de la Chi cuadrado", ylim = c(0,0.07))
+lines(density(y), add = TRUE)
+curve(dnorm(x, mean = mean(y), sd = sd(y)), add = TRUE)
+```
+
+```{r}
+qqnorm(y)
+qqline(y)
+```
+
+```{r}
+hist(y, freq = FALSE, main = "Frecuencias de la Chi cuadrado")
+```
+
+```{r}
+boxplot(y)
+```
+
+```{r}
+boxplot(x, y, names = c("x", "y"))
+```
+
+```{r}
+plot(x, y)
+modelo <- lm(y ~ x)
+abline(modelo)
+```
+
+# Ejecicio 2
+### 1
+```{r}
+apuesta <- function(dados = 4) {
+    muestra <- sample(1:6, dados, replace = TRUE)
+    any(muestra == 6)
+    # 6 %in% muestra # alternativa
+}
+```
+### 2
+```{r}
+nsim <- 10000
+x <- rep(4, nsim)
+x <- sapply(x, apuesta)
+mean(x)
+print("Probabilidad exacta:")
+exacta <- 1 - (5 / 6)^4
+exacta
+all.equal(mean(x), exacta)
+```
+# Ejecicio 3
+```{r}
+nsim <- 1000
+a <- 5
+b <- 4
+U <- runif(nsim)
+
+f <- function(x) {
+    ifelse(x >= b,
+        a * b^a / (x^(a + 1)),
+        0
+    )
+}
+
+F <- function(x) {
+    ifelse(x >= b,
+        1 - (b / x)^a,
+        0
+    )
+}
+
+Finv <- function(u) {
+    b / (1 - u)^(1 / a)
+}
+
+X <- sapply(U, Finv)
+hist(X, freq = FALSE, breaks = "FD")
+lines(density(X))
+
+ks.test(X, F)
+```
+# Ejecicio 4
+
+```{r}
+fun <- function(x) {
+    1 / (1 + x^2)
+}
+
+nsim <- 1000
+X <- runif(nsim)
+Y <- f(X)
+simuls <- cumsum(Y)
+exacto <- pi / 4
+
+```
