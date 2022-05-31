@@ -1,0 +1,50 @@
+### 5.6.2 Comparación de estimadores
+Comparamos estimadores aproximando su distribución en una distribución normal estándar contaminada por una $\mathcal{N}(3,3)$
+```{r}
+n <- 100
+set.seed(1)
+j <- rbinom(n, 1, 0.05) # 1's y 0's indicando si es f2 o f1, respectivamente
+x <- rnorm(n, 3 * j, 1 + 2 * j) # esto genera n valores de f1 o f2 dependiendo de j
+# representamos un histograma de la muestra generada
+hist(x, breaks = "FD", freq = FALSE, main = "Muestra contaminada")
+# superponemos la densidad desde la que se generó
+curve(0.95 * dnorm(x, 0, 1) + 0.05 * dnorm(x, 3, 3), add = TRUE, col = 2)
+```
+
+```{r}
+mean(x)
+median(x)
+```
+Parecen comportarse de manera similar como estimadores de $ \mu $, sin embargo vamos a comparar su distribución muestral:
+
+```{r}
+nsim <- 1000
+set.seed(1)
+j <- rbinom(n * nsim, 1, 0.05)
+muestras <- matrix(rnorm(n * nsim, 3 * j, 1 + 2 * j), nrow = nsim, ncol = n)
+# cada fila de la matriz 'muestras' es una muestra de tamaño n
+# calculamos los estimadores
+medias <- apply(muestras, 1, mean)
+medianas <- apply(muestras, 1, median)
+# comparamos la distribución muestral usando un boxplot
+boxplot(medias, medianas, names = c("Media", "Mediana"))
+# una línea horizontal indicando el valor a estimar (mu=0)
+abline(h = 0, col = 2)
+```
+
+Y tendrían error cuadrático medio
+
+```{r}
+# errores cuadráticos medios
+ecm.media <- mean((medias - 0)^2)
+ecm.media
+ecm.mediana <- mean((medianas - 0)^2)
+ecm.mediana
+# boxplot de las desviaciones al cuadrado
+boxplot(medias^2, medianas^2,
+    ylab = "Errores cuadráticos",
+    names = c("Media", "Mediana")
+)
+```
+
+Con lo cual se concluye que la mediana es mejor estimador en presencia de datos anómalos.
