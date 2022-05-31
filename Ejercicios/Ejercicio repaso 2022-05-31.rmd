@@ -1,5 +1,5 @@
 ---
-title:"Ejercicios de repaso: temas 4 y 5"
+title: "Ejercicios de repaso"
 author: "Lucas Fehlau Arbulu"
 date: "31-05-2022"
 output: 
@@ -8,7 +8,9 @@ output:
         number_sections: false
         toc_float: true
 ---
-
+```{r setup, include=FALSE}
+# knitr::opts_knit$set(global.device = TRUE)
+```
 # Ejecicio 1
 ```{r}
 set.seed(1)
@@ -23,19 +25,10 @@ quantile(y, probs = c(0.25, 0.5, 0.75))
 ```
 ### 2
 ```{r}
-h <- hist(y, plot = FALSE)
+hist(y, freq = FALSE, main = "Muestra de Chi cuadrado", ylim = c(0, max(dnorm(x, mean = mean(x), sd = sd(x)))))
 
-multiplier <- h$counts / h$density
-mydensity <- density(y)
-mydensity$y <- mydensity$y * multiplier[[1]]
-
-plot(h)
-lines(mydensity)
-```
-
-```{r}
-qqnorm(y)
-qqline(y)
+lines(density(y))
+curve(dnorm(x, mean = mean(y), sd = sd(y)), add = TRUE)
 ```
 
 ```{r}
