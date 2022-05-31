@@ -32,9 +32,9 @@ curve(dnorm(x, mean = mean(y), sd = sd(y)), add = TRUE)
 ```
 
 ```{r}
-hist(y, freq = FALSE, main = "Frecuencias de la Chi cuadrado")
+qqnorm(y) # TODO; what?
+qqline(y)
 ```
-
 ```{r}
 boxplot(y)
 ```
@@ -63,11 +63,12 @@ apuesta <- function(dados = 4) {
 nsim <- 10000
 x <- rep(4, nsim)
 x <- sapply(x, apuesta)
-mean(x)
+aprox <- mean(x)
+aprox
 print("Probabilidad exacta:")
 exacta <- 1 - (5 / 6)^4
 exacta
-all.equal(mean(x), exacta)
+all.equal(aprox, exacta)
 ```
 # Ejecicio 3
 ```{r}
@@ -99,18 +100,54 @@ hist(X, freq = FALSE, breaks = "FD")
 lines(density(X))
 
 ks.test(X, F)
+# TODO: comprobar que esto ^ sea correcto
 ```
 # Ejecicio 4
 
 ```{r}
-fun <- function(x) {
+f <- function(x) {
     1 / (1 + x^2)
 }
+```
 
+```{r}
+set.seed(1)
 nsim <- 1000
 X <- runif(nsim)
 Y <- f(X)
-simuls <- cumsum(Y)
-exacto <- pi / 4
+estim <- cumsum(Y) / seq_len(nsim)
+estim.err <- sqrt(cumsum((Y - estim)^2)) / seq_len(nsim)
+plot(estim,
+    type = "l",
+    xlab = "Número de simulaciones",
+    ylab = "Estimación"
+)
 
+z <- qnorm(0.975)
+lines(estim - z * estim.err, lty = 3, lwd = 2, col = "blue")
+lines(estim + z * estim.err, lty = 3, lwd = 2, col = "blue")
+
+exacto <- pi / 4
+abline(h = exacto)
+
+prediccionfinal <- estim[[nsim]]
+all.equal(prediccionfinal, exacto)
 ```
+#### Cosa random que se me ocurrió para el ejercicio
+```{r}
+nsimensemble <- 100
+numensembles <- nsim / nsimensemble
+
+vprediccionfinalensemble <- vector(mode = "numeric", length = numensembles)
+for (i in seq_len(numensembles)) {
+    set.seed(i)
+    nsim <- nsimensemble
+    X <- runif(nsim)
+    Y <- f(X)
+    estim <- cumsum(Y) / seq_len(nsim)
+    vprediccionfinalensemble[[i]] <- estim[[nsim]]
+}
+prediccionfinalensemble <- mean(vprediccionfinalensemble)
+all.equal(prediccionfinalensemble, exacto)
+```
+
