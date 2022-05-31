@@ -99,7 +99,7 @@ for (i in 2:4) {
 # ==> Z_n = (mean(c(X1,...Xn)) - \mu )/(\sigma/sqrt(n))
 # para n --> \infty
 # ~~> intervalo de confianza
-# ...
+# X_n -+ z_{\alpha/2}S_n/sqrt(n)
 
 set.seed(1)
 nsim <- 10000
