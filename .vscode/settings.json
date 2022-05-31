@@ -3,5 +3,6 @@
     "editor.formatOnSaveMode": "modificationsIfAvailable",
     "editor.insertSpaces": true,
     "explorer.sortOrder": "mixed",
-    "files.defaultLanguage": "r"
+    "files.defaultLanguage": "r",
+    "zenMode.hideLineNumbers": false
 }
