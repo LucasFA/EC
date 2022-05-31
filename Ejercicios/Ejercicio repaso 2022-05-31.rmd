@@ -1,5 +1,5 @@
 ---
-title: "Ejercicios de repaso"
+title:"Ejercicios de repaso: temas 4 y 5"
 author: "Lucas Fehlau Arbulu"
 date: "31-05-2022"
 output: 
@@ -23,9 +23,14 @@ quantile(y, probs = c(0.25, 0.5, 0.75))
 ```
 ### 2
 ```{r}
-hist(y, freq = FALSE, main = "Frecuencias de la Chi cuadrado", ylim = c(0,0.07))
-lines(density(y), add = TRUE)
-curve(dnorm(x, mean = mean(y), sd = sd(y)), add = TRUE)
+h <- hist(y, plot = FALSE)
+
+multiplier <- h$counts / h$density
+mydensity <- density(y)
+mydensity$y <- mydensity$y * multiplier[[1]]
+
+plot(h)
+lines(mydensity)
 ```
 
 ```{r}
