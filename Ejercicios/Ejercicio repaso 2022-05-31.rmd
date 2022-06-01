@@ -125,6 +125,18 @@ set.seed(1)
 nsim <- 1000
 X <- runif(nsim)
 Y <- f(X)
+```
+El intervalo de confianza del error al nivel de confianza $1 - \alpha$ con $\alpha = 0.05$ resulta en
+
+$$
+    (\overline X_n -z_{\alpha/2} \frac{S_n}{\sqrt{n}}, \overline X_n + z_{\alpha/2} \frac{S_n}{\sqrt{n}})
+$$
+donde debemos recordar que 
+$$ 
+    S_n = \dfrac{\sum_{i=1}^n X_i}{\sqrt{n}}
+$$
+
+```{r}
 estim <- cumsum(Y) / seq_len(nsim)
 estim.err <- sqrt(cumsum((Y - estim)^2)) / seq_len(nsim)
 plot(estim,
