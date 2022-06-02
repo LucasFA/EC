@@ -1,0 +1,57 @@
+---
+title: "Examen 2"
+author: "Lucas Fehlau Arbulu"
+date: "02-06-2022"
+output:
+    html_document: 
+        toc: false
+        toc_float: false
+---
+
+# Ejercicio 1
+
+## Apartado 1
+```{r setup, echo = FALSE}
+rm(list = ls())
+```
+```{r}
+boxplot(Solar.R ~ Month, data = airquality, names = month.name[5:9])
+```
+
+## Apartados 2 y 3
+
+```{r}
+plot(airquality$Solar.R, airquality$Ozone,
+    xlab = "Radiación solar", ylab = "Concentración de ozono"
+)
+modelo <- lm(Ozone ~ Solar.R, data = airquality)
+abline(modelo)
+```
+
+
+# Ejercicio 2
+
+## Apartado 1
+```{r}
+nsim <- 1000
+set.seed(1)
+U <- runif(nsim)
+a <- 5
+b <- 4
+
+f <- function(x) (a * b^a) / (x^(a + 1))
+F <- function(x) 1 - (b / x)^a
+
+Finv <- function(u) b / (1 - u)^(1 / a)
+
+X <- Finv(U)
+```
+
+## Apartado 2
+
+```{r}
+hist(X, freq = FALSE, breaks = "FD")
+lines(density(X), col = "blue")
+ks.test(X, F)
+```
+<!-- TODO: añadir al histograma la curva real de f(x) -->
