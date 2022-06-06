@@ -12,7 +12,7 @@ output:
 
 ## Apartado 1
 ```{r setup, echo = FALSE}
-rm(list = ls())
+
 ```
 ```{r}
 boxplot(Solar.R ~ Month, data = airquality, names = month.name[5:9])
@@ -39,8 +39,8 @@ U <- runif(nsim)
 a <- 5
 b <- 4
 
-f <- function(x) (a * b^a) / (x^(a + 1))
-F <- function(x) 1 - (b / x)^a
+f <- function(x) (a * b^a) / (x^(a + 1)) * (x >= b)
+F <- function(x) 1 - (b / x)^a * (x >= b)
 
 Finv <- function(u) b / (1 - u)^(1 / a)
 
@@ -52,6 +52,7 @@ X <- Finv(U)
 ```{r}
 hist(X, freq = FALSE, breaks = "FD")
 lines(density(X), col = "blue")
+curve(f, from = b, to = b + 100, add = T)
 ks.test(X, F)
 ```
 <!-- TODO: añadir al histograma la curva real de f(x) -->
