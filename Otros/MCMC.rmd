@@ -103,19 +103,21 @@ entonces $a^{(n+1)} = a^{(n)} \boldsymbol{P}$.
 -->
 
 
-## Metrópolis
+## Metropolis-Hastings
 
 Sea $f$ una función proporcional a la distribución que deseamos aproximar.
-Sea $q(x|y)$ una distribución de probabilidad simétrica que usaremos para generar un nuevo candidato
+
+Sea $Q(x|y)$ una distribución de probabilidad simétrica que usaremos para generar un nuevo candidato
 dado el punto actual $y$. Típicamente se elige la distribución normal (en el número de dimensiones adecuado).
+
 Se toma un estado $x_i$ arbitrario.
 
 Entonces el método consiste en:
 
 1. Se propone un nuevo estado $x'$ a partir de $x_i$ con $Q$
-2. Se calcula la probabilidad de aceptación del candidato $\alpha = min\{1, f(x')/f(x)\}$
+2. Se calcula la probabilidad de aceptación del candidato $\alpha = min\{1, f(x')/f(x_i)\}$
 3. Aceptar la nueva posición con probabilidad $\alpha$ (tomando una muestra de $U(0,1$)).
-4. El siguiente estado es o bien el nuevo, aceptado, o nos mantenemos en el previo, si fue rechazado.
+4. El siguiente estado $x_{i+1}$ es o bien el nuevo, aceptado, o nos mantenemos en el previo, $x_i$, si fue rechazado.
 
 Se obtiene así una sucesión $\{x_n\}_{n\in\mathbb{N}}$ de muestras dependientes.
 Esta dependencia perderá relevancia para un número suficiente de pasos.
@@ -128,15 +130,11 @@ Tomaremos $X$ una variable aleatoria una mixtura[^Mixtura] de dos distribuciones
 puede resultar de tomar muestras de una mezcla heterogénea respecto a alguna característica.
 
 [^Mixtura]: Una mixtura de una familia de variables aleatorias $\{X_i\}_{i\in\Gamma}$ 
-es una variable aleatoria cuya distribución es una suma convexa de las funciones de 
-distribución de las $\{X_i\}_{i\in\Gamma}$. Ejemplo: si $X_1 \sim U(0,1)$ y $X_2 \sim U(2, 4)$, 
-una mixtura sería por ejemplo $X\sim f_X$, donde 
-$f_X(x) = \frac{1}{2} f_{X_1}(x) + \frac{1}{2} f_{X_2}(x)$ 
-```{r, echo= FALSE} 
-f <- function(x) (0 <= x & x <= 1) * 1 / 2 + (2<= x & x <= 4) * 1/4
-plot(f, from = -1, to = 5, n = 200)
-```
+es una variable aleatoria cuya distribución es una combinación convexa de las funciones de 
+distribución de las $\{X_i\}_{i\in\Gamma}$. Nosotros nos limitaremos a mixturas finitas, 
+y de hecho veremos sólo la mixtura de dos variables aleatorias.
 
+Tomaremos una mixtura de dos normales, una $\mathcal{N}(-1, 0.5)$ y una $\mathcal{N}(2, 2)$, con pesos $0.4$ y $0.6 = 1-0.4$, respectivamente.
 
 ```{r}
 p <- 0.4
@@ -149,11 +147,15 @@ f <- function(x) {
 curve(f(x), col = "red", -4, 8, las = 1)
 ```
 
-```{r}
-# Generará los nuevos posibles estados.
-q <- function(x) rnorm(n = 1, mean = x, sd = 4)
+Entonces unas funciones para implementar el método:
 
-# Da un paso del método anteriormente descrito
+La $Q$ que generará estados a partir del actual. El valor de la desviación típica $4$ ha sido elegido arbitrariamente.
+```{r}
+q <- function(x) rnorm(n = 1, mean = x, sd = 4)
+```
+
+Esta función da un paso del método anteriormente descrito:
+```{r}
 paso <- function(punto_previo, f, q) {
     ## Nuevo posible punto:
     candidato <- q(punto_previo)
@@ -167,7 +169,10 @@ paso <- function(punto_previo, f, q) {
     }
 }
 
-# Ejecuta el número de pasos indicado
+```
+
+Y esta función ejecutará el método el número de pasos indicado
+```{r}
 método <- function(x, f, q, npasos) {
     res <- matrix(NA, npasos, length(x))
     for (i in seq_len(npasos))
@@ -179,12 +184,12 @@ método <- function(x, f, q, npasos) {
 Nota: aquí, `método` está implementado de esta extraña manera porque permitirá generalizar a 
 el caso multidimensional, los cuales son los interesantes.
 
-Empezando en un punto arbitrario, por ejemplo, $20$:
+Empezando en un punto arbitrario, por ejemplo, $20$, y ejecutando $1000$ pasos:
 ```{r}
 res <- método(20, f, q, 1000)
 ```
 
-```{r, echo = FALSE}
+```{r, grafica1, echo = FALSE}
 layout(matrix(c(1, 2), 1, 2), widths = c(4, 1))
 par(mar = c(4.1, .5, .5, .5), oma = c(0, 4.1, 0, 0))
 plot(res, type = "s", xpd = NA, ylab = "Parameter", xlab = "Sample", las = 1)
@@ -193,7 +198,7 @@ xx <- seq(usr[3], usr[4], length = 301)
 plot(f(xx), xx, type = "l", yaxs = "i", axes = FALSE, xlab = "")
 ```
 
-```{r, echo = FALSE}
+```{r, grafica2, echo = FALSE}
 hist(res, 50,
     freq = FALSE, main = "", ylim = c(0, .4), las = 1,
     xlab = "x", ylab = "Probability density"
@@ -203,9 +208,9 @@ dist_real <- function(x) f(x)/z
 curve(dist_real(x), add = TRUE, col = "red")
 ```
 
-Para $n$ más grande:
+Para $n = 50 000$:
 
-```{r}
+```{r, grafica3, echo = FALSE}
 set.seed(1)
 res.largo <- método(-10, f, q, 50000)
 hist(res.largo, 100,
@@ -213,4 +218,23 @@ hist(res.largo, 100,
     xlab = "x", ylab = "Probability density", col = "grey"
 )
 curve(dist_real(x), add = TRUE, col = "red")
+```
+
+Aquí incluyo el código para representar las tres últimas gráficas.
+
+Gráfica 1:
+
+```{r, eval = FALSE}
+<<grafica1>>
+```
+
+Gráfica 2:
+```{r, eval = FALSE}
+<<grafica2>>
+```
+
+Gráfica 3:
+
+```{r, eval = FALSE}
+<<grafica3>>
 ```
