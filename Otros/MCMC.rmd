@@ -11,8 +11,8 @@ output:
 
 # Introducción
 
-Vamos a ver qué son los Métodos de Montecarlo basados en cadenas de Markov.
-Las siglas vienen del inglés, *Markov Chain Monte Carlo*.
+Vamos a ver qué son los Métodos de Monte Carlo basados en cadenas de Markov.
+Las siglas vienen del inglés, *Markov Chain Monte Carlo*. Para ello, me baso en el tutorial mencionado en las referencias.
 
 En realidad, van a ser procesos de Markov de acuerdo a las definiciones dadas en clase,
 (vamos a ver Procesos de Markov con espacio de estados continuo $\R$ y tiempo discreto $\N$) 
@@ -24,9 +24,9 @@ procesos de Markov, lo cual no vamos a justificar, pero para lo cual hay referen
 [^refs]: Véase este [artículo sobre lo que llaman cadenas de Harris](https://en.wikipedia.org/wiki/Harris_chain).
 Trata procesos de Markov con espacio de estados no numerables pero medibles.
 
-## Introducción a métodos de Montecarlo
+## Introducción a métodos de Monte Carlo
 
-Los métodos de Montecarlo en general pretenden utilizar muestreo aleatorio repetidamente
+Los métodos de Monte Carlo en general pretenden utilizar muestreo aleatorio repetidamente
 para obtener algún tipo de resultado numérico.
 
 Por ejemplo, aquí incluyo unos scripts de R para aproximar el valor de la siguiente integral.
@@ -35,11 +35,8 @@ $$
     \int_0^5 \sin(x) e^{-x} dx
 $$
 
-```{r setup, echo = FALSE}
-set.seed(1)
-```
-
 ```{r}
+set.seed(1)
 f <- function(x) sin(x) * exp(-x)
 curve(f, 0, 5)
 ```
@@ -84,10 +81,10 @@ abline(h = integral, lwd = 0.5, lty = "dotted")
 ```
 Aquí además hemos indicado en horizontal el valor de la integral calculada numéricamente.
 
-Montecarlo también se puede utilizar para aproximar la probabilidad de un suceso o, como es más utilizado,
+Monte Carlo también se puede utilizar para aproximar la probabilidad de un suceso o, como es más utilizado,
 para aproximar distribuciones de probabilidad cuya expresión analítica
 
-# Cadenas de Markov en métodos de Montecarlo
+# Cadenas de Markov en métodos de Monte Carlo
 
 Aquí vamos a abordar el caso de que queramos tomar muestras de una distribución determinada, 
 con motivos de simulación, por ejemplo.
@@ -107,10 +104,13 @@ resultante de cada paso es una muestra de la distribución deseada. Esto viene d
 
 ## Metropolis-Hastings
 
-Sea $f$ una función proporcional a la distribución que deseamos aproximar.
+Sea $f$ una función proporcional a la función de densidad $p$ que deseamos aproximar, con lo cual
+$$
+    \frac{f(x')}{f(x_i)} = \frac{p(x')}{p(x_i)}
+$$
 
 Sea $Q(x|y)$ una distribución de probabilidad simétrica que usaremos para generar un nuevo candidato
-dado el punto actual $y$. Típicamente se elige la distribución normal (en el número de dimensiones adecuado).
+dado el punto actual $y$. Típicamente se elige la distribución normal (en el número de dimensiones adecuado). Esto es una [caminata aleatoria gaussiana](https://en.wikipedia.org/wiki/Random_walk#Gaussian_random_walk)
 
 Se toma un estado $x_i$ arbitrario.
 
@@ -124,7 +124,9 @@ Entonces el método consiste en:
 Se obtiene así una sucesión $\{x_n\}_{n\in\mathbb{N}}$ de muestras dependientes.
 Esta dependencia perderá relevancia para un número suficiente de pasos.
 
-Intuitivamente, los estados más visitados son los más probables de acuerdo con $f$.
+### Desarrollo formal de la Idea
+
+Si esta sección la completo, posiblemente lo haga dentro de un tiempo. De momento, la sección de [derivación formal del artículo de Metropolis Hastings](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm#Formal_derivation) está bastante completo.
 
 ### Un ejemplo
 
@@ -244,6 +246,9 @@ Gráfica 3:
 
 # Referencias
 
+- Un tutorial en el cual me baso de manera importante:
+    - https://nicercode.github.io/guides/mcmc/
+
 - Wikipedia: 
     - https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo
     - https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm
@@ -252,6 +257,3 @@ Gráfica 3:
 
 - Bookdown.org
     - https://bookdown.org/content/3686/markov-chain-monte-carlo.html
-
-- Un tutorial:
-    - https://nicercode.github.io/guides/mcmc/
