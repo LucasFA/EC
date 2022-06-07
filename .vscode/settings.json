@@ -1,5 +1,4 @@
 {
-    "editor.formatOnSave": true,
     "editor.formatOnSaveMode": "modificationsIfAvailable",
     "editor.insertSpaces": true,
     "explorer.sortOrder": "mixed",
