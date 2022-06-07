@@ -8,11 +8,9 @@ output:
         toc_float: true
 ---
 
-
 ```{r setup, include = FALSE}
 library(knitr)
 opts_chunk$set(fig.cap = "")
-rm(list = ls())
 ```
 
 # Aproximación de una probabilidad
@@ -85,6 +83,7 @@ curve(f1(x), 0.2, 0.4)
 f2 <- function(x) sin(x) * exp(-x) * dbeta(x, a, b)
 curve(f2(x), 0, 1)
 ```
+
 ### Objetivo: 
 (Enunciado) Una vez visualizados los problemas, el objetivo es aproximar las dos integrales anteriores
 utilizando simulación. Para ello te sugiero que consideres $1000$ simulaciones. Además
