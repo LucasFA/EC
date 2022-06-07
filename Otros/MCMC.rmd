@@ -1,7 +1,7 @@
 ---
 title: "Introducción a MCMC"
 author: "Lucas Fehlau Arbulu"
-date: "06-06-2022"
+date: "08-06-2022"
 output: 
     html_document: 
         toc: true
@@ -12,10 +12,19 @@ output:
 # Introducción
 
 Vamos a ver qué son los Métodos de Montecarlo basados en cadenas de Markov.
-Las siglas vienen del inglés, *Markov Chain Monte Carlo*
-<!-- TODO: cadenas? -->
+Las siglas vienen del inglés, *Markov Chain Monte Carlo*.
 
-## Métodos de Montecarlo
+En realidad, van a ser procesos de Markov de acuerdo a las definiciones dadas en clase,
+(vamos a ver Procesos de Markov con espacio de estados continuo $\R$ y tiempo discreto $\N$) 
+sin embargo seguiremos llamándolo cadenas de Markov porque aparentemente es la nomenclatura.
+
+Además, usamos resultados vistos para cadenas de Markov (espacio de estados numerable) para
+procesos de Markov, lo cual no vamos a justificar, pero para lo cual hay referencias online[^refs].
+
+[^refs]: Véase este [artículo sobre lo que llaman cadenas de Harris](https://en.wikipedia.org/wiki/Harris_chain).
+Trata procesos de Markov con espacio de estados no numerables pero medibles.
+
+## Introducción a métodos de Montecarlo
 
 Los métodos de Montecarlo en general pretenden utilizar muestreo aleatorio repetidamente
 para obtener algún tipo de resultado numérico.
@@ -85,23 +94,16 @@ con motivos de simulación, por ejemplo.
 
 ## Idea
 
-Lo que vamos a hacer es crear una cadena de Markov que tenga como distribución límite
-la distribución deseada, para lo cual debemos exigir que cumpla las condiciones del teorema ergódico,
+Lo que vamos a hacer es crear una cadena (de nuevo, en realidad proceso) de Markov que tenga como distribución límite la distribución deseada, para lo cual debemos exigir que cumpla las condiciones del teorema ergódico,
 de forma que la distribución límite sea la estacionaria. 
 
 Así, vamos a buscar una cadena de Markov irreducible, aperiódica en la cual
 todos los estados sean recurrentes positivos.
 
-Entonces, dada esta cadena, vamos a caminar por la cadena, y el estado 
-resultante de cada paso es una muestra de la distribución deseada.
-<!-- 
-### Requisitos
+Claro está, esto sólo lo hemos visto para cadenas de Markov (espacio de estados numerable), pero hay resultados similares en el caso no numerable. También podemos considerar una cadena de Markov con un número de nodos suficientemente grande, tal que el programa que vamos a ver en R sea una buena aproximación al modelo matemático.
 
-Sea $\{X_t\}_{t\in \mathbb{R}}$ una cadena de Markov. Recordamos que
-si $a^{(n)}$ es la distribución absoluta y $\boldsymbol{P}$ es la matriz de transición,
-entonces $a^{(n+1)} = a^{(n)} \boldsymbol{P}$. 
--->
-
+Entonces, dada esta cadena, vamos a caminar por ella, y el estado 
+resultante de cada paso es una muestra de la distribución deseada. Esto viene de atender al hecho de que esta cadena tiene como distribución límite la distribución de probabilidad deseada.
 
 ## Metropolis-Hastings
 
@@ -168,15 +170,15 @@ paso <- function(punto_previo, f, q) {
         punto_previo
     }
 }
-
 ```
 
 Y esta función ejecutará el método el número de pasos indicado
 ```{r}
 método <- function(x, f, q, npasos) {
     res <- matrix(NA, npasos, length(x))
-    for (i in seq_len(npasos))
+    for (i in seq_len(npasos)) {
         res[i, ] <- x <- paso(x, f, q)
+    }
     drop(res)
 }
 ```
@@ -204,7 +206,7 @@ hist(res, 50,
     xlab = "x", ylab = "Probability density"
 )
 z <- integrate(f, -Inf, Inf)$value
-dist_real <- function(x) f(x)/z
+dist_real <- function(x) f(x) / z
 curve(dist_real(x), add = TRUE, col = "red")
 ```
 
@@ -212,7 +214,7 @@ Para $n = 50 000$:
 
 ```{r, grafica3, echo = FALSE}
 set.seed(1)
-res.largo <- método(-10, f, q, 50000)
+res.largo <- método(20, f, q, 50000)
 hist(res.largo, 100,
     freq = FALSE, main = "", ylim = c(0, .4), las = 1,
     xlab = "x", ylab = "Probability density", col = "grey"
@@ -229,6 +231,7 @@ Gráfica 1:
 ```
 
 Gráfica 2:
+
 ```{r, eval = FALSE}
 <<grafica2>>
 ```
@@ -238,3 +241,17 @@ Gráfica 3:
 ```{r, eval = FALSE}
 <<grafica3>>
 ```
+
+# Referencias
+
+- Wikipedia: 
+    - https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo
+    - https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm
+    - https://en.wikipedia.org/wiki/Markov_chains_on_a_measurable_state_space
+    - https://en.wikipedia.org/wiki/Harris_chain
+
+- Bookdown.org
+    - https://bookdown.org/content/3686/markov-chain-monte-carlo.html
+
+- Un tutorial:
+    - https://nicercode.github.io/guides/mcmc/
