@@ -3,7 +3,7 @@ title: "Introducción a MCMC"
 author: "Lucas Fehlau Arbulu"
 date: "06-06-2022"
 output: 
-    html_document:
+    html_document: 
         toc: true
         number_sections: false
         toc_float: true
@@ -12,9 +12,10 @@ output:
 # Introducción
 
 Vamos a ver qué son los Métodos de Montecarlo basados en cadenas de Markov.
+Las siglas vienen del inglés, *Markov Chain Monte Carlo*
 <!-- TODO: cadenas? -->
 
-### Métodos de Montecarlo
+## Métodos de Montecarlo
 
 Los métodos de Montecarlo en general pretenden utilizar muestreo aleatorio repetidamente
 para obtener algún tipo de resultado numérico.
@@ -47,7 +48,7 @@ integral_aprox <- (5 - 0) * mean(fx)
 integral_aprox
 ```
 
-Que intuitivamente puedes llegar a reducirlo, heurísticamente, a base por altura media.
+Que intuitivamente puedes llegar a reducirlo, a base por altura media.
 El valor aproximado por un método numérico clásico sería
 
 ```{r, echo = FALSE}
@@ -77,12 +78,12 @@ Aquí además hemos indicado en horizontal el valor de la integral calculada num
 Montecarlo también se puede utilizar para aproximar la probabilidad de un suceso o, como es más utilizado,
 para aproximar distribuciones de probabilidad cuya expresión analítica
 
-## Cadenas de Markov en métodos de Montecarlo
+# Cadenas de Markov en métodos de Montecarlo
 
 Aquí vamos a abordar el caso de que queramos tomar muestras de una distribución determinada, 
 con motivos de simulación, por ejemplo.
 
-### Idea
+## Idea
 
 Lo que vamos a hacer es crear una cadena de Markov que tenga como distribución límite
 la distribución deseada, para lo cual debemos exigir que cumpla las condiciones del teorema ergódico,
@@ -93,41 +94,16 @@ todos los estados sean recurrentes positivos.
 
 Entonces, dada esta cadena, vamos a caminar por la cadena, y el estado 
 resultante de cada paso es una muestra de la distribución deseada.
-
+<!-- 
 ### Requisitos
 
 Sea $\{X_t\}_{t\in \mathbb{R}}$ una cadena de Markov. Recordamos que
 si $a^{(n)}$ es la distribución absoluta y $\boldsymbol{P}$ es la matriz de transición,
-entonces $a^{(n+1)} = a^{(n)} \boldsymbol{P}$.
-
-### Un ejemplo
-
-Tomaremos $X$ una variable aleatoria una mixtura[^Mixtura] de dos distribuciones normales. Este tipo de distribución
-puede resultar de tomar muestras de una mezcla heterogénea respecto a alguna característica.
-
-[^Mixtura]: Una mixtura de una familia de variables aleatorias $\{X_i\}_{i\in\Gamma}$ 
-es una variable aleatoria cuya distribución es una suma convexa de las funciones de 
-distribución de las $\{X_i\}_{i\in\Gamma}$. Ejemplo: si $X_1 \sim U(0,1)$ y $X_2 \sim U(2, 4)$, 
-una mixtura sería por ejemplo $X\sim f_X$, donde 
-$f_X(x) = \frac{1}{2} f_{X_1}(x) + \frac{1}{2} f_{X_2}(x)$ 
-```{r, echo= FALSE} 
-f <- function(x) (0 <= x & x <= 1) * 1 / 2 + (2<= x & x <= 4) * 1/4
-plot(f, from = -2, to = 5, n = 200)
-```
+entonces $a^{(n+1)} = a^{(n)} \boldsymbol{P}$. 
+-->
 
 
-```{r}
-p <- 0.4
-medias <- c(-1, 2)
-desv_tipicas <- c(.5, 2)
-f <- function(x) {
-    p * dnorm(x, medias[1], desv_tipicas[1]) +
-    (1 - p) * dnorm(x, medias[2], desv_tipicas[2])
-}
-curve(f(x), col = "red", -4, 8, las = 1)
-```
-
-## Metropolis
+## Metrópolis
 
 Sea $f$ una función proporcional a la distribución que deseamos aproximar.
 Sea $q(x|y)$ una distribución de probabilidad simétrica que usaremos para generar un nuevo candidato
@@ -146,12 +122,38 @@ Esta dependencia perderá relevancia para un número suficiente de pasos.
 
 Intuitivamente, los estados más visitados son los más probables de acuerdo con $f$.
 
+### Un ejemplo
+
+Tomaremos $X$ una variable aleatoria una mixtura[^Mixtura] de dos distribuciones normales. Este tipo de distribución
+puede resultar de tomar muestras de una mezcla heterogénea respecto a alguna característica.
+
+[^Mixtura]: Una mixtura de una familia de variables aleatorias $\{X_i\}_{i\in\Gamma}$ 
+es una variable aleatoria cuya distribución es una suma convexa de las funciones de 
+distribución de las $\{X_i\}_{i\in\Gamma}$. Ejemplo: si $X_1 \sim U(0,1)$ y $X_2 \sim U(2, 4)$, 
+una mixtura sería por ejemplo $X\sim f_X$, donde 
+$f_X(x) = \frac{1}{2} f_{X_1}(x) + \frac{1}{2} f_{X_2}(x)$ 
+```{r, echo= FALSE} 
+f <- function(x) (0 <= x & x <= 1) * 1 / 2 + (2<= x & x <= 4) * 1/4
+plot(f, from = -1, to = 5, n = 200)
+```
+
+
+```{r}
+p <- 0.4
+medias <- c(-1, 2)
+desv_tipicas <- c(.5, 2)
+f <- function(x) {
+    p * dnorm(x, medias[1], desv_tipicas[1]) +
+    (1 - p) * dnorm(x, medias[2], desv_tipicas[2])
+}
+curve(f(x), col = "red", -4, 8, las = 1)
+```
 
 ```{r}
 # Generará los nuevos posibles estados.
 q <- function(x) rnorm(n = 1, mean = x, sd = 4)
 
-# Da un paso del método anterior
+# Da un paso del método anteriormente descrito
 paso <- function(punto_previo, f, q) {
     ## Nuevo posible punto:
     candidato <- q(punto_previo)
