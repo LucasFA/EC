@@ -134,7 +134,7 @@ puede resultar de tomar muestras de una mezcla heterogénea respecto a alguna ca
 [^Mixtura]: Una mixtura de una familia de variables aleatorias $\{X_i\}_{i\in\Gamma}$ 
 es una variable aleatoria cuya distribución es una combinación convexa de las funciones de 
 distribución de las $\{X_i\}_{i\in\Gamma}$. Nosotros nos limitaremos a mixturas finitas, 
-y de hecho veremos sólo la mixtura de dos variables aleatorias.
+y de hecho veremos sólo la mixtura de dos variables aleatorias. Véase más en [el artículo de Wikipedia](https://en.wikipedia.org/wiki/Mixture_distribution).
 
 Tomaremos una mixtura de dos normales, una $\mathcal{N}(-1, 0.5)$ y una $\mathcal{N}(2, 2)$, con pesos $0.4$ y $0.6 = 1-0.4$, respectivamente.
 
