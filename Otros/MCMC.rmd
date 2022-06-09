@@ -3,13 +3,11 @@ title: "Introducción a MCMC"
 author: "Lucas Fehlau Arbulu"
 date: "08-06-2022"
 output: 
+    github_document:
+        toc: true
     html_document: 
         toc: true
         keep_md: true
-    github_document:
-        toc: true
-    md_document:
-        toc: true
 ---
 
 # Introducción
