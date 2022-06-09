@@ -5,8 +5,11 @@ date: "08-06-2022"
 output: 
     html_document: 
         toc: true
-        number_sections: false
-        toc_float: true
+        keep_md: true
+    github_document:
+        toc: true
+    md_document:
+        toc: true
 ---
 
 # Introducción
@@ -15,7 +18,7 @@ Vamos a ver qué son los Métodos de Monte Carlo basados en cadenas de Markov.
 Las siglas vienen del inglés, *Markov Chain Monte Carlo*. Para ello, me baso en el tutorial mencionado en las referencias.
 
 En realidad, van a ser procesos de Markov de acuerdo a las definiciones dadas en clase,
-(vamos a ver Procesos de Markov con espacio de estados continuo $\R$ y tiempo discreto $\N$) 
+(vamos a ver Procesos de Markov con espacio de estados continuo $\mathbb{R}$ y tiempo discreto $\mathbb{N}$) 
 sin embargo seguiremos llamándolo cadenas de Markov porque aparentemente es la nomenclatura.
 
 Además, usamos resultados vistos para cadenas de Markov (espacio de estados numerable) para
@@ -146,7 +149,7 @@ medias <- c(-1, 2)
 desv_tipicas <- c(.5, 2)
 f <- function(x) {
     p * dnorm(x, medias[1], desv_tipicas[1]) +
-    (1 - p) * dnorm(x, medias[2], desv_tipicas[2])
+        (1 - p) * dnorm(x, medias[2], desv_tipicas[2])
 }
 curve(f(x), col = "red", -4, 8, las = 1)
 ```
