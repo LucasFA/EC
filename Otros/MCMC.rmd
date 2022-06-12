@@ -228,20 +228,17 @@ Aquí incluyo el código para representar las tres últimas gráficas.
 
 Gráfica 1:
 
-```{r, eval = FALSE}
-<<grafica1>>
+```{r, grafica1, eval = FALSE}
 ```
 
 Gráfica 2:
 
-```{r, eval = FALSE}
-<<grafica2>>
+```{r, grafica2, eval = FALSE}
 ```
 
 Gráfica 3:
 
-```{r, eval = FALSE}
-<<grafica3>>
+```{r, grafica3, eval = FALSE}
 ```
 
 # Referencias
