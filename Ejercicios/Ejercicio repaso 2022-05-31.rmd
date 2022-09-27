@@ -126,6 +126,7 @@ nsim <- 1000
 X <- runif(nsim)
 Y <- f(X)
 ```
+
 El intervalo de confianza del error al nivel de confianza $1 - \alpha$ con $\alpha = 0.05$ resulta en
 
 $$

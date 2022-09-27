@@ -92,7 +92,8 @@ mtcars2 <- within(mtcars, {
 })
 mtcars2
 
-with(mtcars2, boxplot(mpg ~ vs))
+boxplot(mpg ~ vs, data = mtcars2)
+with(mtcars2, boxplot(mpg ~ vs)) # mismo resultado
 with(subset(mtcars2, vs == "V"), hist(mpg, main = "vs=V"))
 with(subset(mtcars2, vs == "S"), hist(mpg, main = "vs=S"))
 
